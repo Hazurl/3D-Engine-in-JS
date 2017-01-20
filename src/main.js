@@ -19,7 +19,6 @@ function InitCanvas () {
 
 window.onload = function() {
     InitCanvas();
-
     Debug.init();
 
     var S = new Scene(
@@ -36,7 +35,7 @@ window.onload = function() {
 
     S.add(cube);
 
-    Debug.log(S);
+    Debug.info('Scene : ', S);
 
     S.render();
     Debug.memoryDebugging();
@@ -44,13 +43,13 @@ window.onload = function() {
     setTimeout(function() {
         S.camera.pos = new Vector3 (5, 0, 0);
         S.camera.lookAt(Vector3.zero);
-        Debug.log(S);
+        Debug.info(S);
         S.render();
     }, 2500);
     setTimeout(function() {
         S.camera.pos = new Vector3 (0.5, 0, 0);
         S.camera.lookAt(new Vector3(0, 0.5, 0.5));
-        Debug.log(S);
+        Debug.info(S);
         S.render();
     }, 5000);
 */

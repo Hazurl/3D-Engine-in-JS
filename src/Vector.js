@@ -5,7 +5,7 @@ class Vector3 {
     }
 
     reBuild (x, y, z) {
-        this.x = x || 0; this.y = y || 0; this.z = z || 0;
+        this.x = x || this.x; this.y = y || this.y; this.z = z || this.z;
         return this;
     }
 
@@ -23,28 +23,22 @@ class Vector3 {
         var n = this.norm();
         if (n === 0)
             return Vector3.zero;
-
-        return reBuild (
-            this.x / n,
-            this.y / n, 
-            this.z / n
-        );
     }
 
     to (v) {
-        return reBuild (v.x - this.x, v.y - this.y, v.z - this.z);
+        return this.reBuild (v.x - this.x, v.y - this.y, v.z - this.z);
     }
 
     mult (a) {
-        return reBuild ( this.x * a, this.y * a, this.z * a);
+        return this.reBuild ( this.x * a, this.y * a, this.z * a);
     }
 
     add (v) {
-        return reBuild (v.x + this.x, v.y + this.y, v.z + this.z);
+        return this.reBuild (v.x + this.x, v.y + this.y, v.z + this.z);
     }
 
     reverse () {
-        return reBuild (-this.x, -this.y, -this.z);
+        return this.reBuild (-this.x, -this.y, -this.z);
     }
 
     toEulerAngle () {

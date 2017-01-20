@@ -45,7 +45,7 @@ class Scene {
 	}
 
 	render () {
-		console.log("Rendering ...");
+		Debug.log_i("Rendering ...", Debug.COLOR.GREEN);
 
 		this.vpObj = new Array();
 
@@ -55,6 +55,7 @@ class Scene {
 				// view on : https://en.wikipedia.org/wiki/3D_projection#Perspective_projection
 
 				var c = this.camera.pos;
+				var r = this.camera.rot;
 				var O = this.camera.rot.toEulerAngle();
 
 				var Cx = Math.cos(O.x);
@@ -84,10 +85,9 @@ class Scene {
 					Cx * CyzpSy_SzypCzx - Sx * (Czy - Sz * x)
 				);
 
-				// I'll take  'e' as 'c' (the camera position)
-				var ez_dz = d.z === 0 ? 0 : c.z / d.z;
+				var ez_dz = d.z === 0 ? 0 : r.z / d.z;
 
-				var pointOnViewPort = new Vector3 (ez_dz * d.x - c.x, ez_dz * d.y - c.y, 0);
+				var pointOnViewPort = new Vector3 (ez_dz * d.x - r.x, ez_dz * d.y - r.y, 0);
 
 				//this.drawPoint(pointOnViewPort.x, pointOnViewPort.y, 1, 1);
 
@@ -97,8 +97,8 @@ class Scene {
 
 		this.objs.forEach(function (o, idx) {
 			var vertexes = this.vpObj[idx];
-			Debug.log(vertexes);
-			Debug.log(o);
+		    Debug.info('Vertexes : ', vertexes);
+		    Debug.info('Entity : ', o);
 
 			// Triangles
 			for (var i = o.triangles.length - 1; i >= 0; i= i-3) {
