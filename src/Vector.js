@@ -37,6 +37,14 @@ class Vector3 {
         return new Vector3 (-this.x, -this.y, -this.z);
     }
 
+    toEulerAngle () {
+        var d = this.norm();
+
+        return d === 0 ?
+            Vector3.zero
+          : new Vector3 (0, Math.atan2(this.y, this.x), Math.acos(this.z / d)); //view on : https://www.opengl.org/discussion_boards/showthread.php/159883-converting-a-3D-vector-into-three-euler-angles
+    }
+
     static get zero ()      { return new Vector3( 0, 0, 0); }
     static get up ()        { return new Vector3( 0, 1, 0); }
     static get down ()      { return new Vector3( 0,-1, 0); }

@@ -27,9 +27,9 @@ window.onload = function() {
                 new Camera(
                     new Vector3(5, 5, 5),
                     new Vector3(5, 5, 5).to(Vector3.zero).normalize(),
-                    1,
-                    canvas
-                )
+                    1
+                ),
+                canvas
             );
     var cube = new Entity (Vector3.zero, Entity.getCubeVertex());
 
