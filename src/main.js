@@ -17,27 +17,43 @@ function InitCanvas () {
     }
 }
 
-function debug (x) { console.log(x); }
-function debugM (msg, x) { debug(msg); debug(x); }
-
 window.onload = function() {
     InitCanvas();
 
+    Debug.init();
+
     var S = new Scene(
                 new Camera(
-                    new Vector3(5, 5, 5),
-                    new Vector3(5, 5, 5).to(Vector3.zero).normalize(),
-                    1
+                    new Vector3(5, 1, 1),
+                    (new Vector3(5, 1, 1).to(Vector3.zero).normalize()),
+                    1,
+                    Camera.MODE.ORTHO
                 ),
                 canvas
             );
-    var cube = new Entity (Vector3.zero, Entity.getCubeVertex());
+
+    var cube = Entity.getCube(Vector3.zero, 1);
 
     S.add(cube);
 
-    debug(S);
+    Debug.log(S);
 
     S.render();
+    Debug.memoryDebugging();
+/*
+    setTimeout(function() {
+        S.camera.pos = new Vector3 (5, 0, 0);
+        S.camera.lookAt(Vector3.zero);
+        Debug.log(S);
+        S.render();
+    }, 2500);
+    setTimeout(function() {
+        S.camera.pos = new Vector3 (0.5, 0, 0);
+        S.camera.lookAt(new Vector3(0, 0.5, 0.5));
+        Debug.log(S);
+        S.render();
+    }, 5000);
+*/
 };
 
 })();

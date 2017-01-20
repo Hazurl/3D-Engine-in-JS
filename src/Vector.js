@@ -1,5 +1,6 @@
 class Vector3 {
     constructor (x, y, z) {
+        Debug.incrementMem('Vector3');
         this.x = x || 0; this.y = y || 0; this.z = z || 0;
     }
 
@@ -14,11 +15,15 @@ class Vector3 {
     norm () { return Math.sqrt(this.normSquare()); }
 
     normalize () {
-        var n = this.norm ();
+        var n = this.norm();
+        if (n === 0)
+            return Vector3.zero;
 
         this.x = this.x / n; 
         this.y = this.y / n; 
         this.z = this.z / n; 
+
+        return this;
     }
 
     to (v) {
