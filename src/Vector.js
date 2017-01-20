@@ -4,7 +4,12 @@ class Vector3 {
         this.x = x || 0; this.y = y || 0; this.z = z || 0;
     }
 
-    copy () { return new Vector3 (this.x, this.y, this.z); } 
+    reBuild (x, y, z) {
+        this.x = x || 0; this.y = y || 0; this.z = z || 0;
+        return this;
+    }
+
+    cp () { return new Vector3 (this.x, this.y, this.z); } 
 
     normSquare () { 
         return this.x * this.x 
@@ -19,27 +24,27 @@ class Vector3 {
         if (n === 0)
             return Vector3.zero;
 
-        this.x = this.x / n; 
-        this.y = this.y / n; 
-        this.z = this.z / n; 
-
-        return this;
+        return reBuild (
+            this.x / n,
+            this.y / n, 
+            this.z / n
+        );
     }
 
     to (v) {
-        return new Vector3 (v.x - this.x, v.y - this.y, v.z - this.z);
+        return reBuild (v.x - this.x, v.y - this.y, v.z - this.z);
     }
 
     mult (a) {
-        return new Vector3 ( this.x * a, this.y * a, this.z * a);
+        return reBuild ( this.x * a, this.y * a, this.z * a);
     }
 
     add (v) {
-        return new Vector3 (v.x + this.x, v.y + this.y, v.z + this.z);
+        return reBuild (v.x + this.x, v.y + this.y, v.z + this.z);
     }
 
     reverse () {
-        return new Vector3 (-this.x, -this.y, -this.z);
+        return reBuild (-this.x, -this.y, -this.z);
     }
 
     toEulerAngle () {
