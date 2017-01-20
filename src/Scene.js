@@ -44,8 +44,25 @@ class Scene {
 		this.ctx.stroke();
 	}
 
-	render () {
+	renderAxes () {
+		if (this.camera.mode === Camera.MODE.ORTHO) {
+			var centerO = new Vector3();
+
+			var origin = this.origin;
+			var posCam = this.camera.pos;
+			var dirCam = this.camera.rot;
+
+
+		} else { // PERSPECTIVE
+			Debug.error('PERSPECTIVE mode not implemented');
+		}
+	}
+
+	render (show_axe) {
 		Debug.log_i("Rendering ...", Debug.COLOR.GREEN);
+
+		if (show_axe)
+			this.renderAxes();
 
 		this.vpObj = new Array();
 

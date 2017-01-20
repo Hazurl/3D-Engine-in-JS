@@ -37,6 +37,10 @@ class Vector3 {
         return this.reBuild (v.x + this.x, v.y + this.y, v.z + this.z);
     }
 
+    sub (v) {
+        return this.reBuild (v.x - this.x, v.y - this.y, v.z - this.z);
+    }
+
     reverse () {
         return this.reBuild (-this.x, -this.y, -this.z);
     }
@@ -47,6 +51,22 @@ class Vector3 {
         return d === 0 ?
             Vector3.zero
           : new Vector3 (0, Math.atan2(this.y, this.x), Math.acos(this.z / d)); //view on : https://www.opengl.org/discussion_boards/showthread.php/159883-converting-a-3D-vector-into-three-euler-angles
+    }
+
+    parallelTo (v) {
+        return this.cp().normalize().equalsTo(v.cp().normalize());
+    }
+
+    equalsTo (v) {
+        return this.x === v.x && this.y === v.y && this.z === v.z;
+    }
+
+    isNull () {
+        return this.x === 0 && this.y === 0 && this.z === 0;
+    }
+
+    scalarPrdct (v) {
+        return this.x * v.x + this.y * v.y + this.z * v.z;
     }
 
     static get zero ()      { return new Vector3( 0, 0, 0); }

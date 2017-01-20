@@ -23,21 +23,21 @@ window.onload = function() {
 
     var S = new Scene(
                 new Camera(
-                    new Vector3(5, 1, 1),
-                    (new Vector3(5, 1, 1).to(Vector3.zero).normalize()),
+                    new Vector3(5, 5, 5),
+                    new Vector3(5, 5, 5).to(Vector3.zero).normalize(),
                     1,
-                    Camera.MODE.ORTHO
+                    Camera.MODE.ORTHO //@TODO
                 ),
                 canvas
             );
 
-    var cube = Entity.getCube(Vector3.zero, 1);
+    /*var cube = Entity.getCube(Vector3.zero, 1);
 
-    S.add(cube);
+    S.add(cube);*/
 
     Debug.info('Scene : ', S);
 
-    S.render();
+    S.render(true);
     Debug.memoryDebugging();
 /*
     setTimeout(function() {
