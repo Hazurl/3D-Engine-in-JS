@@ -23,25 +23,21 @@ function debugM (msg, x) { debug(msg); debug(x); }
 window.onload = function() {
     InitCanvas();
 
-    var v0 = Vector3.zero;
-    var v1 = Vector3.zero;
-    var v2 = new Vector3();
-    var v3 = new Vector3(5, 10, 15);
+    var S = new Scene(
+                new Camera(
+                    new Vector3(5, 5, 5),
+                    new Vector3(5, 5, 5).to(Vector3.zero).normalize(),
+                    1,
+                    canvas
+                )
+            );
+    var cube = new Entity (Vector3.zero, Entity.getCubeVertex());
 
-    v0.x = -2;
+    S.add(cube);
 
-    debug(v0);
-    debug(v1);
-    debug(v2);
-    debug(v3);
+    debug(S);
 
-    debug("normalize v0 ...");
-    v0.normalize();
-    debug(v0);
-
-    debug("normalize v3 ...");
-    v3.normalize();
-    debug(v3);
+    S.render();
 };
 
 })();
