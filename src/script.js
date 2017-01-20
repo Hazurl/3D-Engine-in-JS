@@ -23,17 +23,25 @@ function debugM (msg, x) { debug(msg); debug(x); }
 window.onload = function() {
     InitCanvas();
 
-    var scene = Scene.create(Camera.create(Vector3.create(5, 5, 5), Vector3.zero()))
+    var v0 = Vector3.zero;
+    var v1 = Vector3.zero;
+    var v2 = new Vector3();
+    var v3 = new Vector3(5, 10, 15);
 
-    var cam = Object.create(Camera);
-    cam.pos = Vector3.create(5, 5, 5);
-    cam.lookAt(0, 0, 0);
+    v0.x = -2;
 
-    debugM("Camera : ", cam);
+    debug(v0);
+    debug(v1);
+    debug(v2);
+    debug(v3);
 
-    var obj = Cube.create(0, 0, 0);
+    debug("normalize v0 ...");
+    v0.normalize();
+    debug(v0);
 
-    debugM("obj : ", obj);
+    debug("normalize v3 ...");
+    v3.normalize();
+    debug(v3);
 };
 
 })();

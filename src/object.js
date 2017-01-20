@@ -1,3 +1,35 @@
+class Vector3 {
+    constructor (x, y, z) {
+        this.x = x || 0; this.y = y || 0; this.z = z || 0;
+    }
+
+    copy () { return new Vector3 (this.x, this.y, this.z); } 
+
+    static get zero ()      { return new Vector3( 0, 0, 0); }
+    static get up ()        { return new Vector3( 0, 1, 0); }
+    static get down ()      { return new Vector3( 0,-1, 0); }
+    static get forward ()   { return new Vector3( 1, 0, 0); }
+    static get back ()      { return new Vector3(-1, 0, 0); }
+    static get right ()     { return new Vector3( 0, 0, 1); }
+    static get left ()      { return new Vector3( 0, 0,-1); }
+
+    normSquare () { 
+        return this.x * this.x 
+             + this.y * this.y 
+             + this.z * this.z; 
+    }
+
+    norm () { return Math.sqrt(this.normSquare()); }
+
+    normalize () {
+        var n = this.norm ();
+
+        this.x = this.x / n; 
+        this.y = this.y / n; 
+        this.z = this.z / n; 
+    }
+}
+/*
 const Vector3 = {
     x : 0,
     y : 0, 
@@ -108,4 +140,4 @@ const Scene = {
     addEntity : function (obj) {
         this.entities.push(obj);
     }
-}
+}*/
