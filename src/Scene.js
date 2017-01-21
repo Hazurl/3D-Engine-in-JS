@@ -77,8 +77,8 @@ class Scene {
 				// view on : https://en.wikipedia.org/wiki/3D_projection#Perspective_projection
 
 				var c = this.camera.pos;
-				var r = this.camera.rot;
-				var O = this.camera.rot.toEulerAngle();
+				var r = this.camera.rotDir;
+				var O = this.camera.rotDir.toEulerAngle();
 
 				var Cx = Math.cos(O.x);
 				var Cy = Math.cos(O.y);

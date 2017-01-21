@@ -98,11 +98,12 @@ class Plane {
 	}
 }
 
-class Rectangle {
+class Parallelogram {
 	constructor (origin, v0, v1) {
 		this.origin = (origin instanceof Vector3) ? origin : Vector3.zero;
 		if (v0.isNull() || v1.isNull())
-			throw new Err(__file, __line, "Rectangle cannot have a vector director null");
-
+			throw new Err(__file, __line, "Parallelogram cannot have a vector director null");
+		this.v0 = v0;
+		this.v1 = v1;
 	}
 }

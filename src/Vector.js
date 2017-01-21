@@ -45,6 +45,13 @@ class Vector3 {
         return this.reBuild (-this.x, -this.y, -this.z);
     }
 
+    orthogonalAtRadian (radian) { // 0 mean 
+        // vector orthogonal : o (a, b, c)          current vector : v (x, y, z)
+        // we need ax + by + cz = 0
+
+        /// WHAT I MY DOING ?!?
+    }
+
     toEulerAngle () {
         var d = this.norm();
 
@@ -67,6 +74,27 @@ class Vector3 {
 
     scalarPrdct (v) {
         return this.x * v.x + this.y * v.y + this.z * v.z;
+    }
+
+    alignWith (p0, p1) {
+        return this.cp().to(p0).isCollinearWith(this.cp().to(p1));
+    }
+
+    isCollinearWith (v) {
+        var coef;
+        if (this.coef.x !== 0) {
+            coef = v.x / this.coef.x;
+            return this.coef.y * coef === v.y && this.coef.z * coef === v.z;
+
+        } else if (this.coef.y !== 0) {
+            coef = v.y / this.coef.y;
+            return this.coef.x * coef === v.x && this.coef.z * coef === v.z;
+
+        } else if (this.coef.z !== 0) {
+            coef = v.z / this.coef.z;
+            return this.coef.y * coef === v.y && this.coef.x * coef === v.x;
+        } else
+            return false;
     }
 
     static get zero ()      { return new Vector3( 0, 0, 0); }
