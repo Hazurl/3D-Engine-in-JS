@@ -29,7 +29,7 @@ class Camera {
         this.viewport = this.calculViewPort();
     }
 
-    calculViewPort () {
+    calculViewPortPlane () {
         //Calcul Plane of the canvas relative to the position
 
         //equation cartésienne plan : ax + by + cz + d = 0
@@ -41,5 +41,9 @@ class Camera {
         var d = - (a * ptOnPlane.x + b * ptOnPlane.y + c * ptOnPlane.z); 
 
         return new Plane (a, b, c, d);
+    }
+
+    calculViewPort () {
+        
     }
 }

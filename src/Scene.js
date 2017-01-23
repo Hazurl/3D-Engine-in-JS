@@ -53,8 +53,14 @@ class Scene {
 			var axe_y = new Ray (Vector3.forward, Vector3.zero);
 			var axe_z = new Ray (Vector3.forward, Vector3.zero);
 
-			// Calcul point on viewport 
+			// Calcul point on viewport
+			var maybe_pointOnVP = this.getPointOnviewPort (this.camera, Vector3.zero);
 		}
+	}
+
+	getPointOnviewPort (cam, vertex) {
+		var vp = cam.viewport;
+
 	}
 
 	render (show_axe) {
