@@ -1,7 +1,7 @@
 class Line {
 	constructor (coef, origin) {
 		if (coef.isNull())
-			throw "Line cannot have a vector null";
+			throw new Err(__file, __line, "Line cannot have a vector null");
 
 		this.coef = coef.cp().normalize();
 		this.origin = origin.cp();
@@ -41,16 +41,12 @@ class Line {
 
 		return !(this.coef.scalarPrdct(p.normal) === 0 && p.origin.cp().sub(this.origin).scalarPrdct(p.normal) !== 0);
 	}
-
-	collideWithLine (l) {
-		
-	}
 }
 
 class Ray {
 	constructor (coef, origin) {
 		if (coef.isNull())
-			throw "Ray cannot have a vector null";
+			throw new Err(__file, __line, "Ray cannot have a vector null");
 
 		this.coef = coef.cp().normalize();
 		this.origin = origin.cp();
@@ -87,7 +83,7 @@ class Plane {
 
 		this.normal = new Vector3(a, b, c);
 		if (this.normal.isNull())
-			throw "Plane cannot have a normal null";
+			throw new Err(__file, __line, "Plane cannot have a normal null");
 
 		if (a !== 0)
 			this.origin = new Vector3(-d/a, 0, 0); // ax + d = 0 => x = -d/a
@@ -99,5 +95,14 @@ class Plane {
 
 	isIn (vertex) {
 		return a * vertex.x + b * vertex.y + c * vertex + d === 0;
+	}
+}
+
+class Rectangle {
+	constructor (origin, v0, v1) {
+		this.origin = (origin instanceof Vector3) ? origin : Vector3.zero;
+		if (v0.isNull() || v1.isNull())
+			throw new Err(__file, __line, "Rectangle cannot have a vector director null");
+
 	}
 }

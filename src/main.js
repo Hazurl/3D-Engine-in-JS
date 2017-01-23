@@ -18,6 +18,8 @@ function InitCanvas () {
 }
 
 window.onload = function() {
+    try {
+
     InitCanvas();
     Debug.init();
 
@@ -26,7 +28,7 @@ window.onload = function() {
                     new Vector3(5, 5, 5),
                     new Vector3(5, 5, 5).to(Vector3.zero).normalize(),
                     1,
-                    Camera.MODE.ORTHO //@TODO
+                    Camera.MODE.PERSPECTIVE
                 ),
                 canvas
             );
@@ -53,6 +55,13 @@ window.onload = function() {
         S.render();
     }, 5000);
 */
+
+    } catch (e) {
+        if (e instanceof Err)
+            Debug.err (e);
+        else
+            Debug.error("An error occured in the script !\n" + e);
+    }
 };
 
 })();

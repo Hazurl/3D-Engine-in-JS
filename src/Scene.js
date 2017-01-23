@@ -45,16 +45,15 @@ class Scene {
 	}
 
 	renderAxes () {
-		if (this.camera.mode === Camera.MODE.ORTHO) {
-			var centerO = new Vector3();
-
-			var origin = this.origin;
-			var posCam = this.camera.pos;
-			var dirCam = this.camera.rot;
-
-
-		} else { // PERSPECTIVE
+		if (this.camera.mode === Camera.MODE.ORTHOGRAPHIC) {
 			Debug.error('PERSPECTIVE mode not implemented');
+		} else { // PERSPECTIVE
+			// Each axe :
+			var axe_x = new Ray (Vector3.forward, Vector3.zero);
+			var axe_y = new Ray (Vector3.forward, Vector3.zero);
+			var axe_z = new Ray (Vector3.forward, Vector3.zero);
+
+			// Calcul point on viewport 
 		}
 	}
 
