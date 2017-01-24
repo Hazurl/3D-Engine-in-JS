@@ -113,9 +113,7 @@ class Vector3 {
     }
 
     toMatrix () {
-        var m = new Matrix(3, 1);
-        m.data = [this.x, this.y, this.z];
-        return m;
+        return new Matrix(3, 1).setAll(this.x, this.y, this.z);
     }
 
     static get zero ()      { return new Vector3( 0, 0, 0); }

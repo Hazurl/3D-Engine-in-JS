@@ -77,7 +77,7 @@ class Matrix {
 	}
 
 	toVector3 () {
-		if (this.lines >= 3 || this.columns != 1)
+		if (this.lines > 3 || this.columns != 1)
 			throw new Err (__file, __line, "Matrice not 3 by 1 can't be converted to Vector3");
 		return new Vector3 (this.data[0] || 0, this.data[1] || 0, this.data[2] || 0)
 	}
