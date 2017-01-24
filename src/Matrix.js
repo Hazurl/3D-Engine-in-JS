@@ -1,4 +1,4 @@
-class matrix {
+class Matrix {
 	constructor (lines, columns, def) {
         Debug.incrementMem('matrix');
 
@@ -9,6 +9,8 @@ class matrix {
 		for (var i = this.data.length - 1; i >= 0; i--)
 			this.data[i] = def;
 	}
+
+	get size () { return this.lines * this.columns; }
 
 	cp () {
 		var out = new matrix(this.lines, this.columns);
@@ -24,6 +26,18 @@ class matrix {
 		return this.data[l + c * this.lines] = d;
 	}
 
+	setAll () {
+		if (arguments.length != this.size) {
+			Debug.error ("Matrix : can't assign a different matrix size");
+			return;
+		}
+
+		for (var i = arguments.length - 1; i >= 0; i--) {
+			this.data[i] = arguments[i];
+		}
+		return this;
+	}
+
 	has (l, c) {
 		return l < this.lines && c < this.columns;
 	}
@@ -37,10 +51,12 @@ class matrix {
 		if (m.lines != this.lines || m.columns != this.columns)
 			throw new Err (__file, __line, "Impossible to add a matrice with different size (use directAdd instead)");
 		this.forEach( (i) => (this.data[i] + m.data[i]) );
+		return this;
 	}
 
 	mult (x) {
 		this.forEach( (i) => (this.data[i] * x) );
+		return this;
 	}
 
 	scalar (m) {
@@ -83,6 +99,7 @@ class matrix {
 
 	invert () {
 		this.forEach ( (i) => -this.data[i] );
+		return this;
 	}
 
 	transpose () {
@@ -93,6 +110,7 @@ class matrix {
 		var data = new Array(this.lines * this.columns);
 		this.forEach( (i, c, l) => this.get(c, l));
 		this.data = data;
+		return this;
 	}
 
 	static identity (s, def, nul) {
