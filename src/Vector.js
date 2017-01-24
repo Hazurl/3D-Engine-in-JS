@@ -97,6 +97,21 @@ class Vector3 {
             return false;
     }
 
+    rotateFrom (n, phi) {
+        var cPhi = Math.cos(phi);
+        var xy = n.x * n.y;
+        var xz = n.x * n.z;
+        var zy = n.z * n.y;
+
+        return Matrix.identity(3, cPhi, 0).add(
+                new Matrix (3, 3).setAll(n.x * n.x, xy, xz,
+                                         xy, n.y * n.y, zy,
+                                         xz, zy, n.z * n.z).mult(1 - cPhi)
+            ).add(
+                new Matrix (3, 3).setAll(0, n.z, -n.y, -n.z, 0, n.x, n.y, -n.x, 0).mult(Math.sin(phi))
+            ).toVector3(); //should work
+    }
+
     toMatrix () {
         var m = new Matrix(3, 1);
         m.data = [this.x, this.y, this.z];
