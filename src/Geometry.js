@@ -1,5 +1,7 @@
 class Line {
 	constructor (coef, origin) {
+        Debug.incrementMem('Line');
+
 		if (coef.isNull())
 			throw new Err(__file, __line, "Line cannot have a vector null");
 
@@ -45,6 +47,8 @@ class Line {
 
 class Ray {
 	constructor (coef, origin) {
+        Debug.incrementMem('Ray');
+
 		if (coef.isNull())
 			throw new Err(__file, __line, "Ray cannot have a vector null");
 
@@ -76,6 +80,8 @@ class Ray {
 
 class Plane {
 	constructor (a, b, c, d) {
+        Debug.incrementMem('Plane');
+
 		this.a = a || 0;
 		this.b = b || 0;
 		this.c = c || 0;
@@ -100,6 +106,8 @@ class Plane {
 
 class Parallelogram {
 	constructor (origin, v0, v1) {
+        Debug.incrementMem('Parallelogram');
+
 		this.origin = (origin instanceof Vector3) ? origin : Vector3.zero;
 		if (v0.isNull() || v1.isNull())
 			throw new Err(__file, __line, "Parallelogram cannot have a vector director null");

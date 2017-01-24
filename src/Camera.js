@@ -3,7 +3,7 @@ class Camera {
         Debug.incrementMem('Camera');
 
         this.pos = ((pos instanceof Vector3) ? pos : Vector3.zero);
-        this.rotDir = ((rot instanceof Vector3) ? rot.normalize() : Vector3.forward);
+        this.rotDir = ((rotDir instanceof Vector3) ? rotDir.normalize() : Vector3.forward);
         // must be a value between 0 and 2 not included, represent the trigonometric circle, so 0.5 mean a rotation of 90° on the left
         this.rotation = 0; // not supported
 
@@ -28,8 +28,8 @@ class Camera {
         this.viewport = this.calculViewPort();
     }
 
-    setRot (rot) {
-        this.rotDir = ((rot instanceof Vector3) ? rot.normalize() : Vector3.forward);
+    setRotDir (rotDir) {
+        this.rotDir = ((rotDir instanceof Vector3) ? rotDir.normalize() : Vector3.forward);
         this.viewport = this.calculViewPort();
     }
 
@@ -51,6 +51,6 @@ class Camera {
         // Calcul the origin of the VP
         var d = Math.sqrt(this.height * this.height + this.width * this.width);
         var radian = this.height === 0 ? Math.PI/2 : Math.atan( this.width / this.height );
-        var origin = this.rotDir.cp().mult(this.distViewPort).orthogonalAtRadian(radian).normalize().mult(d);
+        //var origin = this.rotDir.cp().mult(this.distViewPort).orthogonalAtRadian(radian).normalize().mult(d);
     }
 }

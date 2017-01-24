@@ -60,7 +60,7 @@ window.onload = function() {
         if (e instanceof Err)
             Debug.err (e);
         else
-            Debug.error("An error occured in the script !\n" + e);
+            throw e;
     }
 };
 
