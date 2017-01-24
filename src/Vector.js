@@ -97,6 +97,12 @@ class Vector3 {
             return false;
     }
 
+    toMatrix () {
+        var m = new Matrix(3, 1);
+        m.data = [this.x, this.y, this.z];
+        return m;
+    }
+
     static get zero ()      { return new Vector3( 0, 0, 0); }
     static get up ()        { return new Vector3( 0, 1, 0); }
     static get down ()      { return new Vector3( 0,-1, 0); }
