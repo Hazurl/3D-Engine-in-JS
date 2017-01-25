@@ -68,10 +68,10 @@ class Matrix {
 		var out = new Matrix (this.lines, m.columns, 0);
 		var n = m.lines;
 
-		out.forEach((i, c, l) => { //index, column, line
+		out.forEach((i, l, c) => { //index, line, column
 			var tmp = 0;
 			for (var k = 0; k < n; k++)
-				tmp += this.get(c, k) * m.get(k, l);
+				tmp += this.get(l, k) * m.get(k, c);
 			return tmp; // out.set(l, c, tmp)
 		});
 
