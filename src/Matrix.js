@@ -1,6 +1,6 @@
 class Matrix {
 	constructor (lines, columns, def) {
-        Debug.incrementMem('matrix');
+        Debug.incrementMem('Matrix');
 
 		this.lines = lines || 1;
 		this.columns = columns || 1;
@@ -13,7 +13,7 @@ class Matrix {
 	get size () { return this.lines * this.columns; }
 
 	cp () {
-		var out = new matrix(this.lines, this.columns);
+		var out = new Matrix(this.lines, this.columns);
 		out.forEach( (i) => out.data[i] = this.i );
 		return out;
 	}
@@ -28,7 +28,7 @@ class Matrix {
 
 	setAll () {
 		if (arguments.length != this.size) {
-			Debug.error ("Matrix : can't assign a different matrix size");
+			Debug.error ("Matrix : can't assign a different Matrix size");
 			return;
 		}
 
@@ -63,14 +63,14 @@ class Matrix {
 		if (m.lines != this.columns)
 			throw new Err (__file, __line, "Impossible to use scalar product : the columns of the first must be equals to the lines of the second");
 
-		var out = new matrix (this.lines, m.columns, 0);
+		var out = new Matrix (this.lines, m.columns, 0);
 		var n = m.lines;
 
-		out.forEach((i, c, l) => {
+		out.forEach((i, c, l) => { //index, column, line
 			var tmp = 0;
 			for (var k = 0; k < n; k++)
 				tmp += this.get(c, k) * m.get(k, l);
-			return tmp;
+			return tmp; // out.set(l, c, tmp)
 		});
 
 		return out;
@@ -83,7 +83,7 @@ class Matrix {
 	}
 
 	directAdd (m) {
-		var out = new matrix (m.lines + this.lines, m.columns + this.columns);
+		var out = new Matrix (m.lines + this.lines, m.columns + this.columns);
 
 		out.forEach( (i, c, l) => {
 			if (this.has(c, l))
@@ -113,10 +113,25 @@ class Matrix {
 		return this;
 	}
 
+	static rotationMatrix (n, phi) {
+        var cPhi = Math.cos(phi);
+        var xy = n.x * n.y;
+        var xz = n.x * n.z;
+        var zy = n.z * n.y;
+
+        return Matrix.identity(3, cPhi, 0).add(
+                new Matrix (3, 3).setAll(n.x * n.x, xy, xz,
+                                         xy, n.y * n.y, zy,
+                                         xz, zy, n.z * n.z).mult(1 - cPhi)
+            ).add(
+                new Matrix (3, 3).setAll(0, n.z, -n.y, -n.z, 0, n.x, n.y, -n.x, 0).mult(Math.sin(phi))
+            );
+    }
+
 	static identity (s, def, nul) {
 		def = def || 1;
 		nul = nul || 0;
-		var out = new matrix(s, s, nul);
+		var out = new Matrix(s, s, nul);
 		for (var i = s - 1; i >= 0; i--)
 			out.data[i + s * i] = def;
 		return out;

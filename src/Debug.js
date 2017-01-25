@@ -43,6 +43,21 @@ class Debug {
 		console.error(err);
 	}
 
+	static matrix (m, color) {
+		color = color || this.COLOR.GREY;
+		var l = m.lines;
+		var c = m.columns;
+		for (var i = 0; i < l; i++) {
+			var line = "";
+			for (var j = 0; j < c; j++) {
+				line += m.get(i, j);
+				if (j < c - 1)
+					line += '; ';
+			}
+			Debug.log(line, color);
+		}
+	}
+
 	static incrementMem (name) {
 		this.mem[name] = (this.mem[name] + 1) || 1;
 	}
