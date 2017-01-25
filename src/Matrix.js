@@ -43,8 +43,10 @@ class Matrix {
 	}
 
 	forEach (callback) { // callback : (index, line, col)
-		for (var i = this.data.length - 1; i >= 0; i--)
-			this.data[i] = callback(i, i % this.columns, Math.floor(i / this.lines)) || this.data[i];
+		var len = this.data.length;
+		for (var i = 0; i < len; i++)
+			this.data[i] = callback(i, i % this.lines, Math.floor(i / this.lines) ) 
+						|| this.data[i];
 	}
 
 	add (m) {

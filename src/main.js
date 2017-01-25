@@ -41,6 +41,7 @@ window.onload = function() {
 
     S.render(true);
     Debug.memoryDebugging();
+
 /*
     setTimeout(function() {
         S.camera.pos = new Vector3 (5, 0, 0);
