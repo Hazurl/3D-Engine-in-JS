@@ -102,7 +102,7 @@ class Vector3 {
     }
 
     rotateFrom (rotMatrix) {
-        return rotMatrix.scalar(this.toMatrix()).toVector3();
+        return rotMatrix.crossProduct(this.toMatrix()).toVector3();
     }
 
     static get zero ()      { return new Vector3( 0, 0, 0); }

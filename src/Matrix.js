@@ -59,9 +59,9 @@ class Matrix {
 		return this;
 	}
 
-	scalar (m) {
+	crossProduct (m) {
 		if (m.lines != this.columns)
-			throw new Err (__file, __line, "Impossible to use scalar product : the columns of the first must be equals to the lines of the second");
+			throw new Err (__file, __line, "Impossible to use cross product : the columns of the first must be equals to the lines of the second");
 
 		var out = new Matrix (this.lines, m.columns, 0);
 		var n = m.lines;
