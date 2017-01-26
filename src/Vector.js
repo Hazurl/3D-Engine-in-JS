@@ -22,7 +22,8 @@ class Vector3 {
     normalize () {
         var n = this.norm();
         if (n === 0)
-            return Vector3.zero;
+            throw new Err(__file, __line, "Cannot normalize the null vector");
+        return this.reBuild (this.x / n, this.y / n, this.z / n);
     }
 
     to (v) {
@@ -38,7 +39,7 @@ class Vector3 {
     }
 
     sub (v) {
-        return this.reBuild (v.x - this.x, v.y - this.y, v.z - this.z);
+        return this.reBuild (this.x - v.x, this.y - v.y, this.z - v.z);
     }
 
     reverse () {
@@ -82,17 +83,17 @@ class Vector3 {
 
     isCollinearWith (v) {
         var coef;
-        if (this.coef.x !== 0) {
-            coef = v.x / this.coef.x;
-            return this.coef.y * coef === v.y && this.coef.z * coef === v.z;
+        if (this.x !== 0) {
+            coef = v.x / this.x;
+            return this.y * coef === v.y && this.z * coef === v.z;
 
-        } else if (this.coef.y !== 0) {
-            coef = v.y / this.coef.y;
-            return this.coef.x * coef === v.x && this.coef.z * coef === v.z;
+        } else if (this.y !== 0) {
+            coef = v.y / this.y;
+            return this.x * coef === v.x && this.z * coef === v.z;
 
-        } else if (this.coef.z !== 0) {
-            coef = v.z / this.coef.z;
-            return this.coef.y * coef === v.y && this.coef.x * coef === v.x;
+        } else if (this.z !== 0) {
+            coef = v.z / this.z;
+            return this.y * coef === v.y && this.x * coef === v.x;
         } else
             return false;
     }

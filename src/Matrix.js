@@ -42,6 +42,14 @@ class Matrix {
 		return l < this.lines && c < this.columns;
 	}
 
+	equalsTo (m) {
+		for (var i = this.size - 1; i >= 0; i--)
+			if (m.data[i] != this.data[i])
+				return false;
+
+		return true;
+	}
+
 	forEach (callback) { // callback : (index, line, col)
 		var len = this.data.length;
 		for (var i = 0; i < len; i++)
