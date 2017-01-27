@@ -14,7 +14,7 @@ class Matrix {
 
 	cp () {
 		var out = new Matrix(this.lines, this.columns);
-		out.forEach( (i) => out.data[i] = this.i );
+		out.forEach( (i) => this.data[i] );
 		return out;
 	}
 
