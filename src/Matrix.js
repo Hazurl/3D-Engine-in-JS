@@ -50,6 +50,29 @@ class Matrix {
 		return true;
 	}
 
+	toString (inline, toStr) {
+		var s = !inline ? "" : "[";
+		for (var l = 0; l < this.lines; l++){
+			if (l > 0) {
+				if (!inline)
+					s += "\n";
+				else 
+					s += ", ";
+			}
+			s += "[";
+			for (var c = 0; c < this.columns; c++) {
+				if (c > 0)
+					s += ', ';
+				if (toStr)
+					s += this.get(l, c).toString();
+				else
+					s += this.get(l, c);				
+			}
+			s += "]";				
+		}
+		return !inline ? s : s + "]";
+	}
+
 	forEach (callback) { // callback : (index, line, col)
 		var len = this.data.length;
 		for (var i = 0; i < len; i++)
@@ -61,6 +84,13 @@ class Matrix {
 		if (m.lines != this.lines || m.columns != this.columns)
 			throw new Err (__file, __line, "Impossible to add a matrice with different size (use directAdd instead)");
 		this.forEach( (i) => (this.data[i] + m.data[i]) );
+		return this;
+	}
+
+	sub (m) {
+		if (m.lines != this.lines || m.columns != this.columns)
+			throw new Err (__file, __line, "Impossible to sub a matrice with different size (use directAdd instead)");
+		this.forEach( (i) => (this.data[i] - m.data[i]) );
 		return this;
 	}
 
@@ -113,14 +143,10 @@ class Matrix {
 	}
 
 	transpose () {
-		var _ = this.lines;
-		this.lines = this.columns;
-		this.columns = _;
+		var out = new Matrix(this.columns, this.lines);
+		out.forEach( (i, l, c) => this.get(c, l));
 
-		var data = new Array(this.lines * this.columns);
-		this.forEach( (i, c, l) => this.get(c, l));
-		this.data = data;
-		return this;
+		return out;
 	}
 
 	static rotationMatrix (n, phi) {
@@ -145,5 +171,9 @@ class Matrix {
 		for (var i = s - 1; i >= 0; i--)
 			out.data[i + s * i] = def;
 		return out;
+	}
+
+	static constant (s, cst) {
+		return new Matrix(s, s, cst);
 	}
 }

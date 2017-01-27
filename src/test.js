@@ -29,16 +29,20 @@ class Test {
 
         var mIdent = Matrix.identity(3);
         var random = new Matrix(3, 3).setAll(0, 5, 6, -9, -7, 1, -5, 2, 0);
-        var cst1 = new Matrix(5, 3, 1);
+        var random2 = new Matrix(3, 3).setAll(4, -65, 56, -19, -27, -91, 1, 52, 20);
+        var cst1 = new Matrix(3, 3, 1);
 
         Test.shouldBe("size", mIdent.size, 9);
         Test.shouldBe("equalsTo", random.equalsTo(random), true);
         Test.equalsTo("copy", random.cp(), random);
-        Test.shouldBe("get", mIdent.get(2, 2), 1);
         Test.shouldBe("get", random.get(2, 0), -5);
         Test.shouldBe("set", random.set(0, 0, 99), 99);
         Test.shouldBe("has", mIdent.has(3, 0), false);
         Test.equalsTo("add", mIdent.cp().add(cst1), Matrix.identity(3, 2, 1));
+        Test.equalsTo("add and sub", random.cp().add(random2).sub(random2), random);
+        Test.equalsTo("add and mult", random2.cp().add(random2), random2.cp().mult(2))
+        Test.equalsTo("invert and sub", random.cp().invert(), Matrix.constant(3, 0).sub(random));
+        Test.equalsTo("transpose", mIdent.transpose(), mIdent);
     }
 
     static shouldBe (msg, test, should) {
@@ -48,12 +52,12 @@ class Test {
             Debug.log(msg + " : NO (" + test + " -> " + should + ")", Debug.COLOR.RED);
    }
 
-    static equalsTo (msg, v0, v1) {
+    static equalsTo (msg, v0, v1) { // must implement .equalsTo and .toString
         if (v0.equalsTo(v1))
              Debug.log(msg + " : OK", Debug.COLOR.GREEN);
         else {
             Debug.log(msg + " : NO", Debug.COLOR.RED);
-            Debug.info(v0, "should be", v1);
+            Debug.log(v0.toString() + "\nshould be\n" + v1.toString(), Debug.COLOR.RED);
         }
    }
 }
