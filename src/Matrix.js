@@ -25,7 +25,7 @@ class Matrix {
 			|________|________|				ROWS = 2
 			   row 0   row 1
 
-		matrix (row = x, col = y) : data [x + y * COLUMNS]
+		matrix (row = x, col = y) : data [y + x * COLUMNS]
 		data [index] : matrix (row = floor(index / COLUMNS), col = index % COLUMNS )
 	*/
 
@@ -38,11 +38,11 @@ class Matrix {
 	}
 
 	get (row, col) {
-		return this.data[row + col * this.columns];
+		return this.data[col + row * this.columns];
 	}
 
 	set (row, col, value) {
-		return this.data[row + col * this.columns] = value;
+		return this.data[col + row * this.columns] = value;
 	}
 
 	setAll () {
@@ -79,7 +79,7 @@ class Matrix {
 					str += ", ";
 			}
 			str += "[";
-			for (var col = 0;colc < this.columns; col++) {
+			for (var col = 0;col < this.columns; col++) {
 				if (col > 0)
 					str += ', ';
 				if (toStr)
@@ -97,10 +97,11 @@ class Matrix {
 		var row = 0, col = 0;
 
 		for (var idx = 0; idx < len; idx++) {
-			this.data[i] = callback(idx, row, col) 
-						|| this.data[idx];
+			var ret = callback(idx, row, col);
+			if (typeof ret != 'undefined')
+				this.data[idx] = ret;
 			col ++;
-			if (col > this.columns) {
+			if (col >= this.columns) {
 				col = 0;
 				row ++;
 			}

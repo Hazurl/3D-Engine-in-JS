@@ -57,7 +57,7 @@ class Test {
              Debug.log(msg + " : OK", Debug.COLOR.GREEN);
         else {
             Debug.log(msg + " : NO", Debug.COLOR.RED);
-            Debug.log(v0.toString() + "\nshould be\n" + v1.toString(), Debug.COLOR.RED);
+            Debug.log(v0.toString() + "\n\tshould be\n" + v1.toString(), Debug.COLOR.RED);
         }
    }
 }
