@@ -49,8 +49,56 @@ class Camera {
 
     calculViewPort () {
         // Calcul the origin of the VP
-        var d = Math.sqrt(this.height * this.height + this.width * this.width);
+        var d = Math.sqrt(this.height * this.height + this.width * this.width) / 2;
         var radian = this.height === 0 ? Math.PI/2 : Math.atan( this.width / this.height );
-        //var origin = this.rotDir.cp().mult(this.distViewPort).orthogonalAtRadian(radian).normalize().mult(d);
+        // var origin = this.rotDir.cp().mult(this.distViewPort).orthogonalAtRadian(radian).normalize().mult(d);
+
+        // Calcul the rigth vector of the Camera
+        // vectorRigth is perpendicular to rotDir and Vector3.up
+        // if rotDir and Vector3.up are collinear then we set vectorRigth to Vector3.rigth or Vector3.left
+        // depends on the rotDir is up or down
+        // rotDir (a, b, c)
+        // Vector3.up (0, 1, 0)
+        // rigth (x, y, z)
+
+        // Case rotDir and Vector3.up are not collinear
+        // rotDir 'scalar' rigth = 0
+        // Vector3.up 'scalar' rigth = 0
+        // { ax + by + cz = 0
+        // { y = 0
+
+        //  => ax + cz = 0
+        // with x = 1 : z = -a/c
+        // so rigth = (1, 1, -a/c)
+
+        // with z = 1 : x = -c/a
+        // so rigth = (-c/a, 1, 1)
+
+        // Case there are collinear
+        // if rotDir is positif (up)
+        // then rigth = Vector3.rigth
+        // else rigth = Vector3.left
+        var right;
+        if (this.rotDir.isCollinearWith(Vector3.up))
+            if (this.rotDir.y > 0)
+                right = Vector3.right;
+            else
+                right = Vector3.left;
+        else
+            if (this.rotDir.z == 0)
+                right = new Vector3(-this.rotDir.z / this.rotDir.x, 0, 1 ).normalize();
+            else
+                right = new Vector3(1, 0, -this.rotDir.x / this.rotDir.z ).normalize();
+
+        // rotation is not taken into account at the moment
+        Debug.info("Right : ", right);
+        Debug.info("Rotate " + radian + " rad ; Matrix : ", Matrix.rotationMatrix(this.rotDir, radian));
+        return new Parallelogram (
+            this.rotDir.cp().mult(this.distViewPort).sub(right.cp().rotateFrom(
+                Matrix.rotationMatrix(this.rotDir, radian)
+            ).normalize().mult(d)),
+            right.cp().normalize().mult(this.width / 2),
+            Vector3.up.mult(this.height / 2)
+        );
     }
 }

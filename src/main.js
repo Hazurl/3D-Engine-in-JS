@@ -25,9 +25,11 @@ window.onload = function() {
 
     var S = new Scene(
                 new Camera(
-                    new Vector3(5, 5, 5),
-                    new Vector3(5, 5, 5).to(Vector3.zero).normalize(),
+                    new Vector3(0, 0, 0),
+                    new Vector3(1, 0, 0),
                     1,
+                    canvas.height,
+                    canvas.width,
                     Camera.MODE.PERSPECTIVE
                 ),
                 canvas
