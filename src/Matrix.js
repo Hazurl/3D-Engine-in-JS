@@ -21,12 +21,12 @@ class Matrix {
 		data should be : 
 
 			[ 0, 1, 2, 3, 4, 5]
-			|r0|r1|r0|r1|r0|r1|				ROWS = 2
-			|_____|_____|_____|				COLUMNS = 3
-			 col 0 col 1 col 2
+			|c0|c1|c2|c0|c1|c2|				COLUMNS = 3
+			|________|________|				ROWS = 2
+			   row 0   row 1
 
-		matrix (row = x, col = y) : data [x + y * ROWS]
-		data [index] : matrix (row = index % ROWS, col = floor(index / ROWS) )
+		matrix (row = x, col = y) : data [x + y * COLUMNS]
+		data [index] : matrix (row = floor(index / COLUMNS), col = index % COLUMNS )
 	*/
 
 	get size () { return this.rows * this.columns; }
@@ -38,11 +38,11 @@ class Matrix {
 	}
 
 	get (row, col) {
-		return this.data[row + col * this.rows];
+		return this.data[row + col * this.columns];
 	}
 
 	set (row, col, value) {
-		return this.data[row + col * this.rows] = value;
+		return this.data[row + col * this.columns] = value;
 	}
 
 	setAll () {
@@ -52,7 +52,7 @@ class Matrix {
 		}
 
 		for (var i = arguments.length - 1; i >= 0; i--) {
-			this.data[i] = arguments[i];
+			this.data[i] = arguments[i] || 0;
 		}
 		return this;
 	}
@@ -70,33 +70,41 @@ class Matrix {
 	}
 
 	toString (inline, toStr) {
-		var s = !inline ? "" : "[";
+		var str = !inline ? "" : "[";
 		for (var row = 0; row < this.rows; row++){
 			if (row > 0) {
 				if (!inline)
-					s += "\n";
+					str += "\n";
 				else 
-					s += ", ";
+					str += ", ";
 			}
-			s += "[";
+			str += "[";
 			for (var col = 0;colc < this.columns; col++) {
 				if (col > 0)
-					s += ', ';
+					str += ', ';
 				if (toStr)
-					s += this.get(row, col).toString();
+					str += this.get(row, col).toString();
 				else
-					s += this.get(row, col);				
+					str += this.get(row, col);
 			}
-			s += "]";				
+			str += "]";				
 		}
-		return !inline ? s : s + "]";
+		return !inline ? str : str + "]";
 	}
 
-	forEach (callback) { // callback : (index, row, col)
+	forEach (callback) { // callback : (index of data array, row, col)
 		var len = this.data.length;
-		for (var idx = 0; idx < len; idx++)
-			this.data[i] = callback(idx, idx % this.rows, Math.floor(idx / this.rows) ) 
+		var row = 0, col = 0;
+
+		for (var idx = 0; idx < len; idx++) {
+			this.data[i] = callback(idx, row, col) 
 						|| this.data[idx];
+			col ++;
+			if (col > this.columns) {
+				col = 0;
+				row ++;
+			}
+		}
 	}
 
 	add (m) {
@@ -108,7 +116,7 @@ class Matrix {
 
 	sub (m) {
 		if (m.rows != this.rows || m.columns != this.columns)
-			throw new Err (__file, __line, "Impossible to sub a matrice with different size (use directAdd instead)");
+			throw new Err (__file, __line, "Impossible to sub a matrice with different size");
 		this.forEach( (i) => (this.data[i] - m.data[i]) );
 		return this;
 	}
@@ -125,11 +133,11 @@ class Matrix {
 		var out = new Matrix (this.rows, m.columns, 0);
 		var n = m.rows;
 
-		out.forEach((i, c, l) => { //index, column, line
+		out.forEach((i, row, col) => { //index, row, column
 			var tmp = 0;
 			for (var k = 0; k < n; k++)
-				tmp += this.get(c, k) * m.get(k, l);
-			return tmp; // out.set(l, c, tmp)
+				tmp += this.get(row, k) * m.get(k, col);
+			return tmp; // out.set(row, col, tmp)
 		});
 
 		return out;
@@ -137,7 +145,7 @@ class Matrix {
 
 	toVector3 () {
 		if (this.rows > 3 || this.columns != 1)
-			throw new Err (__file, __line, "Matrice not 3 by 1 can't be converted to Vector3");
+			throw new Err (__file, __line, "Matrice not 3 (or less) by 1 can't be converted to Vector3");
 		return new Vector3 (this.data[0] || 0, this.data[1] || 0, this.data[2] || 0)
 	}
 
@@ -163,7 +171,7 @@ class Matrix {
 
 	transpose () {
 		var out = new Matrix(this.columns, this.rows);
-		out.forEach( (i, l, c) => this.get(c, l));
+		out.forEach( (i, row, col) => this.get(col, row)); // inverted
 
 		return out;
 	}
