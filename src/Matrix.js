@@ -1,29 +1,48 @@
 class Matrix {
-	constructor (lines, columns, def) {
+	constructor (rows, columns, def) {
         Debug.incrementMem('Matrix');
 
-		this.lines = lines || 1;
+		this.rows = rows || 1;
 		this.columns = columns || 1;
 		def = def || 0;
-		this.data = new Array(lines * columns);
+		this.data = new Array(rows * columns);
 		for (var i = this.data.length - 1; i >= 0; i--)
 			this.data[i] = def;
 	}
 
-	get size () { return this.lines * this.columns; }
+	/* How data is build : 
+		for example : 
+			[0, 1, 2]
+			[3, 4, 5]				so 2 rows, by 3 columns
+						example :
+							matrix (row = 1, col = 0) : 3
+							matrix (row = 0, col = 2) : 2
+
+		data should be : 
+
+			[ 0, 1, 2, 3, 4, 5]
+			|r0|r1|r0|r1|r0|r1|				ROWS = 2
+			|_____|_____|_____|				COLUMNS = 3
+			 col 0 col 1 col 2
+
+		matrix (row = x, col = y) : data [x + y * ROWS]
+		data [index] : matrix (row = index % ROWS, col = floor(index / ROWS) )
+	*/
+
+	get size () { return this.rows * this.columns; }
 
 	cp () {
-		var out = new Matrix(this.lines, this.columns);
+		var out = new Matrix(this.rows, this.columns);
 		out.forEach( (i) => this.data[i] );
 		return out;
 	}
 
-	get (l, c) {
-		return this.data[l + c * this.lines];
+	get (row, col) {
+		return this.data[row + col * this.rows];
 	}
 
-	set (l, c, d) {
-		return this.data[l + c * this.lines] = d;
+	set (row, col, value) {
+		return this.data[row + col * this.rows] = value;
 	}
 
 	setAll () {
@@ -38,8 +57,8 @@ class Matrix {
 		return this;
 	}
 
-	has (l, c) {
-		return l < this.lines && c < this.columns;
+	has (row, col) {
+		return row > 0 && row < this.rows && col > 0 && col < this.columns;
 	}
 
 	equalsTo (m) {
@@ -52,43 +71,43 @@ class Matrix {
 
 	toString (inline, toStr) {
 		var s = !inline ? "" : "[";
-		for (var l = 0; l < this.lines; l++){
-			if (l > 0) {
+		for (var row = 0; row < this.rows; row++){
+			if (row > 0) {
 				if (!inline)
 					s += "\n";
 				else 
 					s += ", ";
 			}
 			s += "[";
-			for (var c = 0; c < this.columns; c++) {
-				if (c > 0)
+			for (var col = 0;colc < this.columns; col++) {
+				if (col > 0)
 					s += ', ';
 				if (toStr)
-					s += this.get(l, c).toString();
+					s += this.get(row, col).toString();
 				else
-					s += this.get(l, c);				
+					s += this.get(row, col);				
 			}
 			s += "]";				
 		}
 		return !inline ? s : s + "]";
 	}
 
-	forEach (callback) { // callback : (index, line, col)
+	forEach (callback) { // callback : (index, row, col)
 		var len = this.data.length;
-		for (var i = 0; i < len; i++)
-			this.data[i] = callback(i, i % this.lines, Math.floor(i / this.lines) ) 
-						|| this.data[i];
+		for (var idx = 0; idx < len; idx++)
+			this.data[i] = callback(idx, idx % this.rows, Math.floor(idx / this.rows) ) 
+						|| this.data[idx];
 	}
 
 	add (m) {
-		if (m.lines != this.lines || m.columns != this.columns)
+		if (m.rows != this.rows || m.columns != this.columns)
 			throw new Err (__file, __line, "Impossible to add a matrice with different size (use directAdd instead)");
 		this.forEach( (i) => (this.data[i] + m.data[i]) );
 		return this;
 	}
 
 	sub (m) {
-		if (m.lines != this.lines || m.columns != this.columns)
+		if (m.rows != this.rows || m.columns != this.columns)
 			throw new Err (__file, __line, "Impossible to sub a matrice with different size (use directAdd instead)");
 		this.forEach( (i) => (this.data[i] - m.data[i]) );
 		return this;
@@ -100,11 +119,11 @@ class Matrix {
 	}
 
 	crossProduct (m) {
-		if (m.lines != this.columns)
-			throw new Err (__file, __line, "Impossible to use cross product : the columns of the first must be equals to the lines of the second");
+		if (m.rows != this.columns)
+			throw new Err (__file, __line, "Impossible to use cross product : the columns of the first must be equals to the rows of the second");
 
-		var out = new Matrix (this.lines, m.columns, 0);
-		var n = m.lines;
+		var out = new Matrix (this.rows, m.columns, 0);
+		var n = m.rows;
 
 		out.forEach((i, c, l) => { //index, column, line
 			var tmp = 0;
@@ -117,18 +136,18 @@ class Matrix {
 	}
 
 	toVector3 () {
-		if (this.lines > 3 || this.columns != 1)
+		if (this.rows > 3 || this.columns != 1)
 			throw new Err (__file, __line, "Matrice not 3 by 1 can't be converted to Vector3");
 		return new Vector3 (this.data[0] || 0, this.data[1] || 0, this.data[2] || 0)
 	}
 
 	directAdd (m) {
-		var out = new Matrix (m.lines + this.lines, m.columns + this.columns);
+		var out = new Matrix (m.rows + this.rows, m.columns + this.columns);
 
 		out.forEach( (i, c, l) => {
 			if (this.has(c, l))
 				return this.get(c, l);
-			else if (m.has(c + this.lines, l + this.columns))
+			else if (m.has(c + this.rows, l + this.columns))
 				return m.get(c, l);
 			else 
 				return 0;
@@ -143,7 +162,7 @@ class Matrix {
 	}
 
 	transpose () {
-		var out = new Matrix(this.columns, this.lines);
+		var out = new Matrix(this.columns, this.rows);
 		out.forEach( (i, l, c) => this.get(c, l));
 
 		return out;
