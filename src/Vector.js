@@ -9,6 +9,10 @@ class Vector3 {
         return this;
     }
 
+	toString () {
+        return '(' + this.x + ', ' + this.y + ', ' + this.z + ')';
+    }
+
     cp () { return new Vector3 (this.x, this.y, this.z); } 
 
     normSquare () { 
