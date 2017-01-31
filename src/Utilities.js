@@ -1,4 +1,10 @@
 class Maybe {
+	// like the maybe from Haskell
+	// the principe is to create an object to 'maybe' hold something
+	// in the case of this hold nothing, the value is 'Nothing' (can be achieve by get Nothing, and test with isNothing)
+	// in the other case, the object hold something, isJust test if this is holding, Maybe.Just create a maybe object holding the parameter given
+	// fromJust return the object if it's holding one
+	// fromMaybe is like the previous one, but give a default value in case of Nothing
 	constructor (isJust, x) {
 		this._isJust = isJust;
 		this._x = x;

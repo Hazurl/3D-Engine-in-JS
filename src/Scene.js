@@ -44,7 +44,8 @@ class Scene {
 		this.ctx.stroke();
 	}
 
-	renderAxes () {
+	renderAxes (color) {
+		color = color || '#00ff00';
 		if (this.camera.mode === Camera.MODE.ORTHOGRAPHIC) {
 			Debug.error('PERSPECTIVE mode not implemented');
 		} else { // PERSPECTIVE
@@ -54,13 +55,19 @@ class Scene {
 			var axe_z = new Ray (Vector3.forward, Vector3.zero);
 
 			// Calcul point on viewport
-			var maybe_pointOnVP = this.getPointOnviewPort (this.camera, Vector3.zero);
+			var maybe_pointOnVP = this.getPointOnviewPort_PER (Vector3.zero);
 		}
 	}
 
-	getPointOnviewPort (cam, vertex) {
-		var vp = cam.viewport;
+	getPointOnviewPort_ORT (vertex) {
 
+	}
+
+	getPointOnviewPort_PER (vertex) {
+		var vp = this.camera.viewport;
+		var vpPlane = this.camera.viewportPlane;
+
+		var maybe_point = new Ray(this.camera.rotDir, this.camera.pos).getIntersectionWithPlane(vpPlane);
 	}
 
 	render (show_axe) {

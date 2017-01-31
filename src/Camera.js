@@ -13,24 +13,44 @@ class Camera {
         this.height = height || 1;
         this.width = width || 1;
 
-        this.viewport = this.calculViewPort();
+        this._modifV = true;
+    }
+
+    get viewport () {
+        if (this._modifV) {
+            this._viewport = this.calculViewPort();
+            this._viewportPlane = this.calculViewPortPlane();
+            this._modifV = false;
+        }
+            
+        return this._viewport;
+    }
+
+    get viewportPlane () {
+        if (this._modifV) {
+            this._viewport = this.calculViewPort();
+            this._viewportPlane = this.calculViewPortPlane();
+            this._modifV = false;
+        }
+            
+        return this._viewportPlane;
     }
 
     static get MODE () { return { ORTHOGRAPHIC : 0, PERSPECTIVE : 1 }; }
 
     lookAt (pos) {
         this.rotDir = this.pos.cp().to(pos).normalize();
-        this.viewport = this.calculViewPort();
+        this._modifV = true;
     }
 
     setPos (pos) {
         this.pos = ((pos instanceof Vector3) ? pos : Vector3.zero);
-        this.viewport = this.calculViewPort();
+        this._modifV = true;
     }
 
     setRotDir (rotDir) {
         this.rotDir = ((rotDir instanceof Vector3) ? rotDir.normalize() : Vector3.forward);
-        this.viewport = this.calculViewPort();
+        this._modifV = true;
     }
 
     calculViewPortPlane () {

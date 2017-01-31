@@ -42,13 +42,6 @@ window.onload = function() {
     Debug.info('Scene : ', S);
     Debug.info('Camera : ', S.camera);
 
-    Debug.log("4 corners of the camera's parallelogram :")
-    var p = S.camera.viewport;
-    Debug.info(p.origin);
-    Debug.info(p.origin.cp().add(p.v0));
-    Debug.info(p.origin.cp().add(p.v0).add(p.v1));
-    Debug.info(p.origin.cp().add(p.v1));
-
     S.render(true);
     Debug.memoryDebugging();
 

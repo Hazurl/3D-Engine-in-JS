@@ -1,11 +1,11 @@
 class Line {
-	constructor (coef, origin) {
+	constructor (dir, origin) {
         Debug.incrementMem('Line');
 
-		if (coef.isNull())
+		if (dir.isNull())
 			throw new Err(__file, __line, "Line cannot have a vector null");
 
-		this.coef = coef.cp().normalize();
+		this.dir = dir.cp().normalize();
 		this.origin = origin.cp();
 	}
 
@@ -16,17 +16,17 @@ class Line {
 	isIn (vertex) {
 		var v = vertex.cp().sub(this.origin);
 		var coef;
-		if (this.coef.x !== 0) {
-			coef = v.x / this.coef.x;
-			return this.coef.y * coef === v.y && this.coef.z * coef === v.z;
+		if (this.dir.x !== 0) {
+			coef = v.x / this.dir.x;
+			return this.dir.y * coef === v.y && this.dir.z * coef === v.z;
 
-		} else if (this.coef.y !== 0) {
-			coef = v.y / this.coef.y;
-			return this.coef.x * coef === v.x && this.coef.z * coef === v.z;
+		} else if (this.dir.y !== 0) {
+			coef = v.y / this.dir.y;
+			return this.dir.x * coef === v.x && this.dir.z * coef === v.z;
 
 		} else {
-			coef = v.z / this.coef.z;
-			return this.coef.y * coef === v.y && this.coef.x * coef === v.x;
+			coef = v.z / this.dir.z;
+			return this.dir.y * coef === v.y && this.dir.x * coef === v.x;
 		}
 	}
 
@@ -41,18 +41,18 @@ class Line {
 		//			- l.n = 0 and (p0 - l0).n != 0		then		Line is parallel with the plane (no intersection)
 		//			- otherwise							then		Line and plane has one intersection : d*l + l0
 
-		return !(this.coef.scalarPrdct(p.normal) === 0 && p.origin.cp().sub(this.origin).scalarPrdct(p.normal) !== 0);
+		return this.dir.scalarPrdct(p.normal) !== 0 || p.origin.cp().sub(this.origin).scalarPrdct(p.normal) === 0;
 	}
 }
 
 class Ray {
-	constructor (coef, origin) {
+	constructor (dir, origin) {
         Debug.incrementMem('Ray');
 
-		if (coef.isNull())
+		if (dir.isNull())
 			throw new Err(__file, __line, "Ray cannot have a vector null");
 
-		this.coef = coef.cp().normalize();
+		this.dir = dir.cp().normalize();
 		this.origin = origin.cp();
 	}
 
@@ -63,18 +63,29 @@ class Ray {
 	isIn (vertex) {
 		var v = vertex.cp().sub(this.origin);
 		var coef;
-		if (this.coef.x !== 0) {
-			coef = v.x / this.coef.x;
-			return coef >= 0 && this.coef.y * coef === v.y && this.coef.z * coef === v.z;
+		if (this.dir.x !== 0) {
+			coef = v.x / this.dir.x;
+			return coef >= 0 && this.dir.y * coef === v.y && this.dir.z * coef === v.z;
 
-		} else if (this.coef.y !== 0) {
-			coef = v.y / this.coef.y;
-			return coef >= 0 && this.coef.x * coef === v.x && this.coef.z * coef === v.z;
+		} else if (this.dir.y !== 0) {
+			coef = v.y / this.dir.y;
+			return coef >= 0 && this.dir.x * coef === v.x && this.dir.z * coef === v.z;
 
 		} else {
-			coef = v.z / this.coef.z;
-			return coef >= 0 && this.coef.y * coef === v.y && this.coef.x * coef === v.x;
+			coef = v.z / this.dir.z;
+			return coef >= 0 && this.dir.y * coef === v.y && this.dir.x * coef === v.x;
 		}
+	}
+
+	collideWithPlane (plane) {
+		return this.dir.scalarPrdct(p.normal) > 0 || p.origin.cp().sub(this.origin).scalarPrdct(p.normal) === 0;
+	}
+
+	getIntersectionWithPlane (plane) {
+		if (this.collideWithPlane(plane)) {
+
+		} else
+			return Maybe.Nothing;
 	}
 }
 
