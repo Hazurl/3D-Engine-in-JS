@@ -49,9 +49,6 @@ class Camera {
 
     calculViewPort () {
         // Calcul the origin of the VP
-        var d = Math.sqrt(this.height * this.height + this.width * this.width) / 2;
-        var radian = this.height === 0 ? Math.PI/2 : Math.atan( this.width / this.height );
-        // var origin = this.rotDir.cp().mult(this.distViewPort).orthogonalAtRadian(radian).normalize().mult(d);
 
         // Calcul the rigth vector of the Camera
         // vectorRigth is perpendicular to rotDir and Vector3.up
@@ -93,12 +90,16 @@ class Camera {
         // rotation is not taken into account at the moment
         Debug.info("Right : ", right);
         Debug.info("Rotate " + radian + " rad ; Matrix : ", Matrix.rotationMatrix(this.rotDir, radian));
+
+        var u = Math.sqrt(this.height * this.height / 4 + this.width * this.width / 4);
+        var radian = this.height === 0 ? 0 : Math.atan( this.height / this.width );
+        
         return new Parallelogram (
-            this.rotDir.cp().mult(this.distViewPort).sub(right.cp().rotateFrom(
-                Matrix.rotationMatrix(this.rotDir, radian)
-            ).normalize().mult(d)),
-            right.cp().normalize().mult(this.width / 2),
-            Vector3.up.mult(this.height / 2)
+            this.rotDir.cp().mult(this.distViewPort).add(this.pos).sub(right.rotateFrom(
+                Matrix.rotationMatrix(this.rotDir, -radian)
+            ).setSize(u)),
+            right.cp().setSize(this.width),
+            new Vector3 (0, this.height, 0)
         );
     }
 }

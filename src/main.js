@@ -25,12 +25,12 @@ window.onload = function() {
 
     var S = new Scene(
                 new Camera(
-                    new Vector3(0, 0, 0),
-                    new Vector3(1, 0, 0),
-                    1,
-                    canvas.height,
-                    canvas.width,
-                    Camera.MODE.PERSPECTIVE
+                    new Vector3(0, 0, 0),       // position
+                    new Vector3(1, 0, 1),       // direction of rotation
+                    1,                          // distance to VP
+                    canvas.height,              // height of VP
+                    canvas.width,               // width of VP
+                    Camera.MODE.PERSPECTIVE     // Camera.MODE
                 ),
                 canvas
             );
@@ -40,6 +40,14 @@ window.onload = function() {
     S.add(cube);*/
 
     Debug.info('Scene : ', S);
+    Debug.info('Camera : ', S.camera);
+
+    Debug.log("4 corners of the camera's parallelogram :")
+    var p = S.camera.viewport;
+    Debug.info(p.origin);
+    Debug.info(p.origin.cp().add(p.v0));
+    Debug.info(p.origin.cp().add(p.v0).add(p.v1));
+    Debug.info(p.origin.cp().add(p.v1));
 
     S.render(true);
     Debug.memoryDebugging();

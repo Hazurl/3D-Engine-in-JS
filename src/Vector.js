@@ -34,6 +34,13 @@ class Vector3 {
         return this.reBuild (v.x - this.x, v.y - this.y, v.z - this.z);
     }
 
+    setSize (s) {
+        var n = this.norm();
+        if (n === 0)
+            throw new Err(__file, __line, "Cannot normalize the null vector");
+        return this.reBuild (this.x / n * s, this.y / n * s, this.z / n * s);
+    }
+
     mult (a) {
         return this.reBuild ( this.x * a, this.y * a, this.z * a);
     }
