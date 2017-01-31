@@ -18,6 +18,7 @@ class Camera {
 
     get viewport () {
         if (this._modifV) {
+		    Debug.log_i("Calcul VP ...", Debug.COLOR.GREEN);
             this._viewport = this.calculViewPort();
             this._viewportPlane = this.calculViewPortPlane();
             this._modifV = false;
@@ -28,6 +29,7 @@ class Camera {
 
     get viewportPlane () {
         if (this._modifV) {
+		    Debug.log_i("Calcul VP ...", Debug.COLOR.GREEN);
             this._viewport = this.calculViewPort();
             this._viewportPlane = this.calculViewPortPlane();
             this._modifV = false;
@@ -107,12 +109,12 @@ class Camera {
             else
                 right = new Vector3(1, 0, -this.rotDir.x / this.rotDir.z ).normalize();
 
+        var u = Math.sqrt(this.height * this.height / 4 + this.width * this.width / 4);
+        var radian = this.width === 0 ? Math.PI/2 : Math.atan( this.height / this.width );
+
         // rotation is not taken into account at the moment
         Debug.info("Right : ", right);
         Debug.info("Rotate " + radian + " rad ; Matrix : ", Matrix.rotationMatrix(this.rotDir, radian));
-
-        var u = Math.sqrt(this.height * this.height / 4 + this.width * this.width / 4);
-        var radian = this.height === 0 ? 0 : Math.atan( this.height / this.width );
         
         return new Parallelogram (
             this.rotDir.cp().mult(this.distViewPort).add(this.pos).sub(right.rotateFrom(

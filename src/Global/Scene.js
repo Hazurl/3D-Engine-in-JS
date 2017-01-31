@@ -21,8 +21,17 @@ class Scene {
 		return v.mult(this.zoom).add(this.origin);
 	}
 
-	drawPoint (x, y, thickness) {
-		this.ctx.fillRect(Math.floor(x - thickness/2), Math.floor(y - thickness/2), thickness,thickness);
+	drawPoint_PER (vertex) {
+		Debug.log_i("DrawPoint " + vertex.toString() + " ...", Debug.COLOR.GREEN);
+		var maybe_pointOnVP = this.getPointOnviewPort_PER (vertex);
+
+		if (maybe_pointOnVP.isJust()) {
+			var pointOnVP = maybe_pointOnVP.fromJust();
+
+			Canvas.DrawPoint(this.ctx, pointOnVP.x, pointOnVP.y, '#00ff00', 10);
+			Debug.log_ig("Point zero reprensented at (" + pointOnVP.x + ", " + pointOnVP.y + ")", Debug.COLOR.RED);
+		} else
+			Debug.log_ig("Point zero can't be reprensented on the canvas", Debug.COLOR.RED);
 	}
 
 	drawTriangle (x0, y0, x1, y1, x2, y2) {
@@ -51,11 +60,13 @@ class Scene {
 		} else { // PERSPECTIVE
 			// Each axe :
 			var axe_x = new Ray (Vector3.forward, Vector3.zero);
-			var axe_y = new Ray (Vector3.forward, Vector3.zero);
-			var axe_z = new Ray (Vector3.forward, Vector3.zero);
+			var axe_y = new Ray (Vector3.up, Vector3.zero);
+			var axe_z = new Ray (Vector3.right, Vector3.zero);
 
-			// Calcul point on viewport
-			var maybe_pointOnVP = this.getPointOnviewPort_PER (Vector3.zero);
+			this.drawPoint_PER(Vector3.zero);
+			this.drawPoint_PER(Vector3.up.mult(5));
+			this.drawPoint_PER(Vector3.right.mult(15));
+			this.drawPoint_PER(Vector3.forward);
 		}
 	}
 
@@ -67,7 +78,15 @@ class Scene {
 		var vp = this.camera.viewport;
 		var vpPlane = this.camera.viewportPlane;
 
-		var maybe_point = new Ray(this.camera.rotDir, this.camera.pos).getIntersectionWithPlane(vpPlane);
+		Debug.log("vpPlane, vertex, camera ray ", Debug.COLOR.BLUE);
+		Debug.info(vpPlane, vertex, new Ray(this.camera.rotDir, this.camera.pos));
+
+		var I = new Ray(this.camera.rotDir, this.camera.pos).getIntersectionWithPlane(vpPlane);
+
+		if (I.isNothing())
+			return Maybe.Nothing;
+
+		return Maybe.Just(vp.getRelative(I.fromJust()));
 	}
 
 	render (show_axe) {

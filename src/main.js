@@ -25,8 +25,8 @@ window.onload = function() {
 
     var S = new Scene(
                 new Camera(
-                    new Vector3(1, 1, 1),                       // position
-                    new Vector3(1, 1, 1).to(Vector3.zero),      // direction of rotation
+                    new Vector3(0, 0, 10),                       // position
+                    new Vector3(0, 0, 10).to(Vector3.zero),      // direction of rotation
                     1,                                          // distance to VP
                     canvas.height,                              // height of VP
                     canvas.width,                               // width of VP
