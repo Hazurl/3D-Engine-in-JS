@@ -25,12 +25,12 @@ window.onload = function() {
 
     var S = new Scene(
                 new Camera(
-                    new Vector3(0, 0, 0),       // position
-                    new Vector3(1, 0, 1),       // direction of rotation
-                    1,                          // distance to VP
-                    canvas.height,              // height of VP
-                    canvas.width,               // width of VP
-                    Camera.MODE.PERSPECTIVE     // Camera.MODE
+                    new Vector3(1, 1, 1),                       // position
+                    new Vector3(1, 1, 1).to(Vector3.zero),      // direction of rotation
+                    1,                                          // distance to VP
+                    canvas.height,                              // height of VP
+                    canvas.width,                               // width of VP
+                    Camera.MODE.PERSPECTIVE                     // Camera.MODE
                 ),
                 canvas
             );

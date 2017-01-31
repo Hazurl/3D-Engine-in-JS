@@ -9,6 +9,10 @@ class Line {
 		this.origin = origin.cp();
 	}
 
+	at (k) {
+		return this.dir.cp().mult(k).add(this.origin);
+	}
+
 	transpose (trans) {
 		this.origin.add(trans);
 	}
@@ -43,6 +47,16 @@ class Line {
 
 		return this.dir.scalarPrdct(p.normal) !== 0 || p.origin.cp().sub(this.origin).scalarPrdct(p.normal) === 0;
 	}
+
+	getIntersectionWithPlane (plane) { // Maybe
+		var scalar = this.dir.scalar(plane.normal);
+		if (scalar === 0)
+			return Maybe.Nothing;
+
+		var k = (-plane.d - plane.a * this.origin.x - plane.b * this.origin.y - plane.b * this.origin.y) / scalar;
+
+		return Maybe.Just(this.at( k ));
+	}
 }
 
 class Ray {
@@ -54,6 +68,13 @@ class Ray {
 
 		this.dir = dir.cp().normalize();
 		this.origin = origin.cp();
+	}
+
+	at (k) {
+		if (k < 0)
+			throw new Err(__file, __line, "Ray.at must have his parameter positive");
+
+		return this.dir.cp().mult(k).add(this.origin);
 	}
 
 	transpose (trans) {
@@ -81,11 +102,16 @@ class Ray {
 		return this.dir.scalarPrdct(p.normal) > 0 || p.origin.cp().sub(this.origin).scalarPrdct(p.normal) === 0;
 	}
 
-	getIntersectionWithPlane (plane) {
-		if (this.collideWithPlane(plane)) {
-
-		} else
+	getIntersectionWithPlane (plane) { // Maybe
+		var scalar = this.dir.scalar(plane.normal);
+		if (scalar === 0)
 			return Maybe.Nothing;
+
+		var k = (-plane.d - plane.a * this.origin.x - plane.b * this.origin.y - plane.b * this.origin.y) / scalar;
+		if (k < 0)
+			return Maybe.Nothing;
+
+		return Maybe.Just(this.at( k ));
 	}
 }
 
@@ -108,6 +134,10 @@ class Plane {
 			this.origin = new Vector3(0, -d/b, 0); // by + d = 0 => y = -d/b
 		else 
 			this.origin = new Vector3(0, 0, -d/c); // cz + d = 0 => z = -d/c
+	}
+
+	get normal () {
+		return new Vector3(this.a, this.b, this.c);
 	}
 
 	isIn (vertex) {
