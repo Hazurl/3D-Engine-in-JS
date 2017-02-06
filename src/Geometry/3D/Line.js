@@ -9,6 +9,10 @@ class Line {
 		this.origin = origin.cp();
 	}
 
+	toString () {
+		return "Line at " + this.origin.toString() + " on direction : " + this.dir.toString();
+	}
+
 	at (k) {
 		return this.dir.cp().mult(k).add(this.origin);
 	}

@@ -67,7 +67,15 @@ class Debug {
 			Debug.log_g("\"" + name + "\" has been created " + this.mem[name] + " times !", this.COLOR.BLUE);
 	}
 
-	static get COLOR () { return {GREY : 'color:#aaaaaa;', RED : 'color:#ff2222;', GREEN : 'color:#55aa22;', BLUE : 'color:#2255aa;'}; }
+	static get COLOR () { return { GREY : 'color:#aaaaaa;', 
+																 RED : 'color:#ff2222;', 
+																 GREEN : 'color:#55aa22;', 
+																 BLUE : 'color:#2255aa;',
+																 D_BLUE : 'color:#000066;',
+																 PINK : 'color:#dd4792;',
+																 YELLOW : 'color:#dddd00;'
+															 }; 
+											}
 }
 
 class Err {

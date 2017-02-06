@@ -2,11 +2,15 @@ class Parallelogram {
 	constructor (origin, v0, v1) {
         Debug.incrementMem('Parallelogram');
 
-		this.origin = (origin instanceof Vector3) ? origin : Vector3.zero;
+		this.origin = instanceofOr(origin, Vector3, Vector3.zero);
 		if (v0.isNull() || v1.isNull())
 			throw new Err(__file, __line, "Parallelogram cannot have a vector director null");
 		this.v0 = v0;
 		this.v1 = v1;
+	}
+
+	toString () {
+		return "Parallelogram at " + this.origin.toString() + ", with border : " + this.v0.toString() + " and " + this.v1.toString();
 	}
 
 	at(x, y) {
@@ -14,7 +18,8 @@ class Parallelogram {
 	}
 
 	getRelative (vertex) {
-		Debug.info(vertex, this.origin, this.v0, this.v1);
+		Debug.log_i("vertex to find relative : " + vertex, Debug.COLOR.BLUE);
+		Debug.log_i("this plane : " + this, Debug.COLOR.BLUE);
 		if (this.v0.x !== 0){
 			var ma_vx = (vertex.x - this.origin.x) / this.v0.x;
 			var uy_uxvx = this.v1.y - this.v1.x / this.v0.x;
@@ -23,12 +28,9 @@ class Parallelogram {
 				var coef_v0 = ma_vx - this.v1.x * uy_uxvx;
 				var coef_v1 = -(vertex.y - this.origin.y - ma_vx) / uy_uxvx;
 
-				Debug.info("coef getrelative X : ", coef_v0, coef_v1);
+				Debug.log_i("coef getrelative X (" + coef_v0 +', ' + coef_v1 + ')', Debug.COLOR.BLUE);
 
-				if (coef_v0 <= 1 && coef_v0 >= 0 && coef_v1 <= 1 && coef_v1 >= 0)
-					return this.v0.cp().mult(coef_v0).add(this.v1.cp().mult(coef_v1));
-				else
-					throw new Err(__file, __line, "vertex not in the Parallelogram");
+				return this.v0.cp().mult(coef_v0).add(this.v1.cp().mult(coef_v1));
 			}
 		}
 		if (this.v0.y !== 0){
@@ -41,10 +43,7 @@ class Parallelogram {
 
 				Debug.info("coef getrelative Y : ", coef_v0, coef_v1);
 
-				if (coef_v0 <= 1 && coef_v0 >= 0 && coef_v1 <= 1 && coef_v1 >= 0)
-					return this.v0.cp().mult(coef_v0).add(this.v1.cp().mult(coef_v1));
-				else
-					throw new Err(__file, __line, "vertex not in the Parallelogram");
+				return this.v0.cp().mult(coef_v0).add(this.v1.cp().mult(coef_v1));
 			}
 		}
 		if (this.v0.z !== 0){
@@ -57,12 +56,9 @@ class Parallelogram {
 
 				Debug.info("coef getrelative Z : ", coef_v0, coef_v1);
 
-				if (coef_v0 <= 1 && coef_v0 >= 0 && coef_v1 <= 1 && coef_v1 >= 0)
-					return this.v0.cp().mult(coef_v0).add(this.v1.cp().mult(coef_v1));
-				else
-					throw new Err(__file, __line, "vertex not in the Parallelogram");
+				return this.v0.cp().mult(coef_v0).add(this.v1.cp().mult(coef_v1));
 			}
 		}
-		throw new Err (__file, __line, "undefined behaviour");
+		throw new Err (__file, __line, "undefined behaviour on getRelative with " + vertex);
 	}
 }

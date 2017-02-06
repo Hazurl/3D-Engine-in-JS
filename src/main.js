@@ -25,8 +25,8 @@ window.onload = function() {
 
     var S = new Scene(
                 new Camera(
-                    new Vector3(0, 0, 10),                       // position
-                    new Vector3(0, 0, 10).to(Vector3.zero),      // direction of rotation
+                    new Vector3(10, 10, 10),                      // position
+                    new Vector3(10, 10, 10).to(Vector3.zero),     // direction of rotation
                     1,                                          // distance to VP
                     canvas.height,                              // height of VP
                     canvas.width,                               // width of VP
@@ -35,12 +35,11 @@ window.onload = function() {
                 canvas
             );
 
-    /*var cube = Entity.getCube(Vector3.zero, 1);
+    var cube = Entity.getCube(Vector3.zero, 1);
+    S.add(cube);
 
-    S.add(cube);*/
-
-    Debug.info('Scene : ', S);
-    Debug.info('Camera : ', S.camera);
+    Debug.log_ig('Scene : ' + S, Debug.COLOR.RED);
+    Debug.log_ig('Camera : ' + S.camera, Debug.COLOR.RED);
 
     S.render(true);
     Debug.memoryDebugging();
@@ -63,8 +62,7 @@ window.onload = function() {
     } catch (e) {
         if (e instanceof Err)
             Debug.err (e);
-        else
-            throw e;
+        throw e;
     }
 };
 

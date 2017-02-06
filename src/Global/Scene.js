@@ -13,6 +13,10 @@ class Scene {
         this.zoom = 10;
 	}
 
+	toString () {
+		return "Scene with " + this.objs.length + " objects";
+	}
+
 	add (obj) {
 		this.objs.push(obj);
 	}
@@ -21,17 +25,39 @@ class Scene {
 		return v.mult(this.zoom).add(this.origin);
 	}
 
-	drawPoint_PER (vertex) {
+	drawPoint_PER (vertex, color) {
 		Debug.log_i("DrawPoint " + vertex.toString() + " ...", Debug.COLOR.GREEN);
+		color = color || '#000000';
 		var maybe_pointOnVP = this.getPointOnviewPort_PER (vertex);
 
 		if (maybe_pointOnVP.isJust()) {
 			var pointOnVP = maybe_pointOnVP.fromJust();
 
-			Canvas.DrawPoint(this.ctx, pointOnVP.x, pointOnVP.y, '#00ff00', 10);
-			Debug.log_ig("Point zero reprensented at (" + pointOnVP.x + ", " + pointOnVP.y + ")", Debug.COLOR.RED);
+			Canvas.DrawPoint(this.ctx, pointOnVP.x, pointOnVP.y, color, 3);
+			Debug.log_ig("Point reprensented at (" + pointOnVP.x + ", " + pointOnVP.y + ")", Debug.COLOR.RED);
 		} else
-			Debug.log_ig("Point zero can't be reprensented on the canvas", Debug.COLOR.RED);
+			Debug.log_ig("Point can't be reprensented on the canvas", Debug.COLOR.RED);
+	}
+
+	drawRay_PER (vertex, vertex2, color) {
+		Debug.log_i("DrawRay between " + vertex + " and " + vertex2 + " ...", Debug.COLOR.GREEN);
+		color = color || '#000000';
+		var maybe_pointOnVP = this.getPointOnviewPort_PER (vertex);
+		var maybe_pointOnVP2 = this.getPointOnviewPort_PER (vertex2);
+
+		if (maybe_pointOnVP.isJust() && maybe_pointOnVP2.isJust()) {
+			var pointOnVP = maybe_pointOnVP.fromJust();
+			var pointOnVP2 = maybe_pointOnVP2.fromJust();
+
+			Canvas.DrawRay(this.ctx, pointOnVP.x, pointOnVP.y, pointOnVP2.x, pointOnVP2.y, color, 1);
+			Debug.log_ig("First point reprensented at (" + pointOnVP.x + ", " + pointOnVP.y + ")", Debug.COLOR.RED);
+			Debug.log_ig("Second point reprensented at (" + pointOnVP2.x + ", " + pointOnVP2.y + ")", Debug.COLOR.RED);
+		} else {
+			if (!maybe_pointOnVP.isJust())
+				Debug.log_ig("First point can't be reprensented on the canvas", Debug.COLOR.RED);
+			if (!maybe_pointOnVP2.isJust())
+				Debug.log_ig("Second point can't be reprensented on the canvas", Debug.COLOR.RED);
+		}
 	}
 
 	drawTriangle (x0, y0, x1, y1, x2, y2) {
@@ -63,10 +89,14 @@ class Scene {
 			var axe_y = new Ray (Vector3.up, Vector3.zero);
 			var axe_z = new Ray (Vector3.right, Vector3.zero);
 
-			this.drawPoint_PER(Vector3.zero);
-			this.drawPoint_PER(Vector3.up.mult(5));
-			this.drawPoint_PER(Vector3.right.mult(15));
-			this.drawPoint_PER(Vector3.forward);
+			this.drawRay_PER(Vector3.zero, Vector3.up.mult(10000000), '#0000ff');
+			this.drawRay_PER(Vector3.zero, Vector3.right, '#0000ff');
+			this.drawRay_PER(Vector3.zero, Vector3.forward.mult(10000000), '#0000ff');
+
+			this.drawPoint_PER(Vector3.zero, '#ff0000');
+			this.drawPoint_PER(Vector3.up.mult(10000000), '#ffff00');
+			this.drawPoint_PER(Vector3.right, '#ff00ff');
+			this.drawPoint_PER(Vector3.forward.mult(10000000), '#00ff00');
 		}
 	}
 
@@ -78,13 +108,16 @@ class Scene {
 		var vp = this.camera.viewport;
 		var vpPlane = this.camera.viewportPlane;
 
-		Debug.log("vpPlane, vertex, camera ray ", Debug.COLOR.BLUE);
-		Debug.info(vpPlane, vertex, new Ray(this.camera.rotDir, this.camera.pos));
+		Debug.log("viewport plane : " + vpPlane.toString(), Debug.COLOR.GREEN);
+		Debug.log("vertex : " + vertex.toString(), Debug.COLOR.GREEN);
+		Debug.log("Ray build : " + new Ray(this.camera.pos.cp().to(vertex), this.camera.pos).toString(), Debug.COLOR.GREEN);
 
-		var I = new Ray(this.camera.rotDir, this.camera.pos).getIntersectionWithPlane(vpPlane);
+		var I = new Ray(this.camera.pos.cp().to(vertex), this.camera.pos).getIntersectionWithPlane(vpPlane);
 
 		if (I.isNothing())
 			return Maybe.Nothing;
+
+		Debug.log_g("Intersection on vp " + I.fromJust().toString(), Debug.COLOR.D_BLUE);
 
 		return Maybe.Just(vp.getRelative(I.fromJust()));
 	}
@@ -94,7 +127,7 @@ class Scene {
 
 		if (show_axe)
 			this.renderAxes();
-
+		return;
 		this.vpObj = new Array();
 
 		this.objs.forEach(function (o, i) {

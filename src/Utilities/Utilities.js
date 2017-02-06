@@ -27,3 +27,8 @@ class Maybe {
 			return this._x;
 	}
 }
+
+// replace "x instanceof c ? x : def"
+function instanceofOr (value, clazz, def) {
+	return value instanceof clazz ? value : def;
+}

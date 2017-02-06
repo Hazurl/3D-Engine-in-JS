@@ -9,6 +9,10 @@ class Ray {
 		this.origin = origin.cp();
 	}
 
+	toString () {
+		return "Ray at " + this.origin.toString() + " on direction : " + this.dir.toString();
+	}
+
 	at (k) {
 		if (k < 0)
 			throw new Err(__file, __line, "Ray.at must have his parameter positive");
@@ -46,7 +50,7 @@ class Ray {
 		if (scalar === 0)
 			return Maybe.Nothing;
 
-		var k = (-plane.d - plane.a * this.origin.x - plane.b * this.origin.y - plane.b * this.origin.y) / scalar;
+		var k = (-plane.d - plane.a * this.origin.x - plane.b * this.origin.y - plane.c * this.origin.z) / scalar;
 		if (k < 0)
 			return Maybe.Nothing;
 

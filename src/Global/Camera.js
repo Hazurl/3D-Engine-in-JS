@@ -2,8 +2,8 @@ class Camera {
     constructor (pos, rotDir, distViewPort, height, width, mode) {
         Debug.incrementMem('Camera');
 
-        this.pos = ((pos instanceof Vector3) ? pos : Vector3.zero);
-        this.rotDir = ((rotDir instanceof Vector3) ? rotDir.normalize() : Vector3.forward);
+        this.pos = instanceofOr(pos, Vector3, Vector3.zero);
+        this.rotDir = instanceofOr(rotDir, Vector3, Vector3.forward).normalize();
         // must be a value between 0 and 2 not included, represent the trigonometric circle, so 0.5 mean a rotation of 90° on the left
         this.rotation = 0; // not supported
 
@@ -14,6 +14,10 @@ class Camera {
         this.width = width || 1;
 
         this._modifV = true;
+    }
+
+    toString() {
+        return "Camera in " + (this.mode === Camera.MODE.ORTHOGRAPHIC ? "orthographic" : "perspective") + " mode at " + this.pos.toString() + " looking in direction " + this.rotDir.toString();
     }
 
     get viewport () {
@@ -46,12 +50,12 @@ class Camera {
     }
 
     setPos (pos) {
-        this.pos = ((pos instanceof Vector3) ? pos : Vector3.zero);
+        this.pos = instanceofOr(pos, Vector3, Vector3.zero);
         this._modifV = true;
     }
 
     setRotDir (rotDir) {
-        this.rotDir = ((rotDir instanceof Vector3) ? rotDir.normalize() : Vector3.forward);
+        this.rotDir = instanceofOr(rotDir, Vector3, Vector3.forward);
         this._modifV = true;
     }
 
@@ -59,7 +63,8 @@ class Camera {
         //Calcul Plane of the canvas relative to the position
 
         //equation cartésienne plan : ax + by + cz + d = 0
-        var ptOnPlane = this.rotDir.cp().mult(this.distViewPort);
+        var ptOnPlane = this.pos.cp().add(this.rotDir.cp().mult(this.distViewPort));
+        Debug.log_i("pt on Plane (VP) : " + ptOnPlane, Debug.COLOR.BLUE);
 
         var a = this.rotDir.x;
         var b = this.rotDir.y;
@@ -113,8 +118,8 @@ class Camera {
         var radian = this.width === 0 ? Math.PI/2 : Math.atan( this.height / this.width );
 
         // rotation is not taken into account at the moment
-        Debug.info("Right : ", right);
-        Debug.info("Rotate " + radian + " rad ; Matrix : ", Matrix.rotationMatrix(this.rotDir, radian));
+        Debug.log("Right : " + right.toString(), Debug.COLOR.YELLOW);
+        Debug.log("Rotate " + radian + " rad ; Matrix : \n" + Matrix.rotationMatrix(this.rotDir, radian).toString(false), Debug.COLOR.YELLOW);
         
         return new Parallelogram (
             this.rotDir.cp().mult(this.distViewPort).add(this.pos).sub(right.rotateFrom(
