@@ -119,7 +119,7 @@ class Camera {
 
         // rotation is not taken into account at the moment
         Debug.log("Right : " + right.toString(), Debug.COLOR.YELLOW);
-        Debug.log("Rotate " + radian + " rad ; Matrix : \n" + Matrix.rotationMatrix(this.rotDir, radian).toString(false), Debug.COLOR.YELLOW);
+        Debug.log("Rotate " + radian + " rad ; Matrix : \n" + Matrix.rotationMatrix(this.rotDir, -radian).toString(false), Debug.COLOR.YELLOW);
         
         return new Parallelogram (
             this.rotDir.cp().mult(this.distViewPort).add(this.pos).sub(right.rotateFrom(

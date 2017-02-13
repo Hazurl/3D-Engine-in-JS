@@ -1,21 +1,21 @@
-class Ray {
+class Ray3 {
 	constructor (dir, origin) {
-        Debug.incrementMem('Ray');
+        Debug.incrementMem('Ray3');
 
 		if (dir.isNull())
-			throw new Err(__file, __line, "Ray cannot have a vector null");
+			throw new Err(__file, __line, "Ray3 cannot have a vector null");
 
 		this.dir = dir.cp().normalize();
 		this.origin = origin.cp();
 	}
 
 	toString () {
-		return "Ray at " + this.origin.toString() + " on direction : " + this.dir.toString();
+		return "Ray3 at " + this.origin.toString() + " on direction : " + this.dir.toString();
 	}
 
 	at (k) {
 		if (k < 0)
-			throw new Err(__file, __line, "Ray.at must have his parameter positive");
+			throw new Err(__file, __line, "Ray3.at must have his parameter positive");
 
 		return this.dir.cp().mult(k).add(this.origin);
 	}

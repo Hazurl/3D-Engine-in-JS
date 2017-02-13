@@ -25,9 +25,9 @@ window.onload = function() {
 
     var S = new Scene(
                 new Camera(
-                    new Vector3(10, 10, 10),                      // position
-                    new Vector3(10, 10, 10).to(Vector3.zero),     // direction of rotation
-                    1,                                          // distance to VP
+                    new Vector3(150, 150, 150),                      // position
+                    new Vector3(150, 150, 150).to(Vector3.zero),     // direction of rotation
+                    125,                                          // distance to VP
                     canvas.height,                              // height of VP
                     canvas.width,                               // width of VP
                     Camera.MODE.PERSPECTIVE                     // Camera.MODE
@@ -35,8 +35,8 @@ window.onload = function() {
                 canvas
             );
 
-    var cube = Entity.getCube(Vector3.zero, 1);
-    S.add(cube);
+    //var cube = Entity.getCube(Vector3.zero, 1);
+    //S.add(cube);
 
     Debug.log_ig('Scene : ' + S, Debug.COLOR.RED);
     Debug.log_ig('Camera : ' + S.camera, Debug.COLOR.RED);

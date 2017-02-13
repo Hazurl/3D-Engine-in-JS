@@ -20,45 +20,30 @@ class Parallelogram {
 	getRelative (vertex) {
 		Debug.log_i("vertex to find relative : " + vertex, Debug.COLOR.BLUE);
 		Debug.log_i("this plane : " + this, Debug.COLOR.BLUE);
-		if (this.v0.x !== 0){
-			var ma_vx = (vertex.x - this.origin.x) / this.v0.x;
-			var uy_uxvx = this.v1.y - this.v1.x / this.v0.x;
-			
-			if (uy_uxvx !== 0){
-				var coef_v0 = ma_vx - this.v1.x * uy_uxvx;
-				var coef_v1 = -(vertex.y - this.origin.y - ma_vx) / uy_uxvx;
-
-				Debug.log_i("coef getrelative X (" + coef_v0 +', ' + coef_v1 + ')', Debug.COLOR.BLUE);
-
-				return this.v0.cp().mult(coef_v0).add(this.v1.cp().mult(coef_v1));
-			}
-		}
-		if (this.v0.y !== 0){
-			var nb_vy = (vertex.y - this.origin.y) / this.v0.y;
-			var uz_uyvy = this.v1.z - this.v1.y / this.v0.y;
-			
-			if (uz_uyvy !== 0){
-				var coef_v0 = nb_vy - this.v1.y * uz_uyvy;
-				var coef_v1 = -(vertex.z - this.origin.z - nb_vy) / uz_uyvy;
-
-				Debug.info("coef getrelative Y : ", coef_v0, coef_v1);
-
-				return this.v0.cp().mult(coef_v0).add(this.v1.cp().mult(coef_v1));
-			}
-		}
-		if (this.v0.z !== 0){
-			var oc_vz = (vertex.x - this.origin.x) / this.v0.z;
-			var ux_uzvz = this.v1.x - this.v1.z / this.v0.z;
-			
-			if (ux_uzvz !== 0){
-				var coef_v0 = oc_vz - this.v1.z * ux_uzvz;
-				var coef_v1 = -(vertex.x - this.origin.x - oc_vz) / ux_uzvz;
-
-				Debug.info("coef getrelative Z : ", coef_v0, coef_v1);
-
-				return this.v0.cp().mult(coef_v0).add(this.v1.cp().mult(coef_v1));
-			}
-		}
-		throw new Err (__file, __line, "undefined behaviour on getRelative with " + vertex);
+		/*	| t * v0.x + k * v1.x = vertex.x - origin.x
+		 *	| t * v0.y + k * v1.y = vertex.y - origin.y
+		 * 	| t * v0.z + k * v1.z = vertex.z - origin.z
+		 * 
+		 * Matrix : M[row, col]
+		 * [ v0.x		v1.x		vertex.x - origin.x ]
+		 * [ v0.y		v1.y		vertex.y - origin.y ]
+		 * [ v0.z		v1.z		vertex.z - origin.z ]
+		 * 
+		 * - find 'i' such as M[i, 1] != 0
+		 * - M[i+1] = [ M[i+1, 0] - M[i+1, 1] / M[i, 1] * M[i, 0]		0		M[i, 2] - M[i+1, 1] / M[i, 1] * M[i, 2] ]
+		 * - M[i+2] = [ M[i+2, 0] - M[i+2, 1] / M[i, 1] * M[i, 0]		0		M[i, 2] - M[i+2, 1] / M[i, 1] * M[i, 2] ]
+		 * 
+		 * - find 'j' such as M[i, 0] != 0 and j != i
+		 * - M[j]= [ 1		0		M[j, 2] / M[j, 0] ]
+		 * 
+		 * So t = M[j, 2]
+		 * 
+		 * - Calcul k :
+		 * - M[i] = [0		1		M[i, 2] - M[i, 0] * t / M[i, 1] ]
+		 * 
+		 * So k = M[i, 2]
+		 * 
+		 * return (t, k)
+		 */
 	}
 }

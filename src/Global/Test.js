@@ -50,10 +50,10 @@ class Test {
         var S = new Scene( new Camera( new Vector3(0, 0, 10),  new Vector3(0, 0, 10).to(Vector3.zero), 1, 900, 1600, Camera.MODE.PERSPECTIVE), {getContext (){}});
         Debug.log_i( new Vector3(5, 6, 7).toString()                                                    , Debug.COLOR.PINK );
         Debug.log_i( Entity.getCube(Vector3.zero, 10).toString()                                        , Debug.COLOR.PINK );
-        Debug.log_i( new Line(Vector3.forward, Vector3.zero).toString()                                 , Debug.COLOR.PINK );
+        Debug.log_i( new Line3(Vector3.forward, Vector3.zero).toString()                                 , Debug.COLOR.PINK );
         Debug.log_i( new Parallelogram(new Vector3(1, 2, 3), Vector3.forward, Vector3.up).toString()    , Debug.COLOR.PINK );
         Debug.log_i( new Plane(Vector3.up, 3).toString()                                                , Debug.COLOR.PINK );
-        Debug.log_i( new Ray(Vector3.forward, Vector3.zero).toString()                                  , Debug.COLOR.PINK );
+        Debug.log_i( new Ray3(Vector3.forward, Vector3.zero).toString()                                  , Debug.COLOR.PINK );
         Debug.log_i( S.camera.toString()                                                                , Debug.COLOR.PINK );
         Debug.log_i( S.toString()                                                                       , Debug.COLOR.PINK );
         Debug.log_i( Matrix.identity(4).toString()                                                      , Debug.COLOR.PINK );

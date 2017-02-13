@@ -1,16 +1,16 @@
-class Line {
+class Line3 {
 	constructor (dir, origin) {
-        Debug.incrementMem('Line');
+        Debug.incrementMem('Line3');
 
 		if (dir.isNull())
-			throw new Err(__file, __line, "Line cannot have a vector null");
+			throw new Err(__file, __line, "Line3 cannot have a vector null");
 
 		this.dir = dir.cp().normalize();
 		this.origin = origin.cp();
 	}
 
 	toString () {
-		return "Line at " + this.origin.toString() + " on direction : " + this.dir.toString();
+		return "Line3 at " + this.origin.toString() + " on direction : " + this.dir.toString();
 	}
 
 	at (k) {
@@ -45,8 +45,8 @@ class Line {
 		// p0 : poitn du plan : p.origin
 
 		// 		3 cases : 
-		//			- l.n = 0 and (p0 - l0).n = 0		then 		Line is in the plane
-		//			- l.n = 0 and (p0 - l0).n != 0		then		Line is parallel with the plane (no intersection)
+		//			- l.n = 0 and (p0 - l0).n = 0		then 		Line3 is in the plane
+		//			- l.n = 0 and (p0 - l0).n != 0		then		Line3 is parallel with the plane (no intersection)
 		//			- otherwise							then		Line and plane has one intersection : d*l + l0
 
 		return this.dir.scalarPrdct(p.normal) !== 0 || p.origin.cp().sub(this.origin).scalarPrdct(p.normal) === 0;

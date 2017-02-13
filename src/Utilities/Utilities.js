@@ -32,3 +32,7 @@ class Maybe {
 function instanceofOr (value, clazz, def) {
 	return value instanceof clazz ? value : def;
 }
+
+function isbetween (x, a, b) {
+	return x >= a && b >= x;
+}

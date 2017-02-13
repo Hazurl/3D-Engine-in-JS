@@ -17,8 +17,11 @@ class Scene {
 		return "Scene with " + this.objs.length + " objects";
 	}
 
-	add (obj) {
-		this.objs.push(obj);
+	add (obj, z_index, color, thickness) {
+        z_index = z_index || 0;
+        color = color || '#000000';
+        thickness = thickness || 1;
+		this.objs.push({obj : obj, idx : z_index, col : color, thick : thickness});
 	}
 
 	transpose (v) {
@@ -39,8 +42,8 @@ class Scene {
 			Debug.log_ig("Point can't be reprensented on the canvas", Debug.COLOR.RED);
 	}
 
-	drawRay_PER (vertex, vertex2, color) {
-		Debug.log_i("DrawRay between " + vertex + " and " + vertex2 + " ...", Debug.COLOR.GREEN);
+	drawRay3_PER (vertex, vertex2, color) {
+		Debug.log_i("DrawRay3 between " + vertex + " and " + vertex2 + " ...", Debug.COLOR.GREEN);
 		color = color || '#000000';
 		var maybe_pointOnVP = this.getPointOnviewPort_PER (vertex);
 		var maybe_pointOnVP2 = this.getPointOnviewPort_PER (vertex2);
@@ -85,18 +88,18 @@ class Scene {
 			Debug.error('PERSPECTIVE mode not implemented');
 		} else { // PERSPECTIVE
 			// Each axe :
-			var axe_x = new Ray (Vector3.forward, Vector3.zero);
-			var axe_y = new Ray (Vector3.up, Vector3.zero);
-			var axe_z = new Ray (Vector3.right, Vector3.zero);
+			var axe_x = new Ray3 (Vector3.forward, Vector3.zero);
+			var axe_y = new Ray3 (Vector3.up, Vector3.zero);
+			var axe_z = new Ray3 (Vector3.right, Vector3.zero);
 
-			this.drawRay_PER(Vector3.zero, Vector3.up.mult(10000000), '#0000ff');
-			this.drawRay_PER(Vector3.zero, Vector3.right, '#0000ff');
-			this.drawRay_PER(Vector3.zero, Vector3.forward.mult(10000000), '#0000ff');
+			this.drawRay3_PER(Vector3.zero, Vector3.up, '#0000ff');
+			this.drawRay3_PER(Vector3.zero, Vector3.right, '#0000ff');
+			this.drawRay3_PER(Vector3.zero, Vector3.forward, '#0000ff');
 
 			this.drawPoint_PER(Vector3.zero, '#ff0000');
-			this.drawPoint_PER(Vector3.up.mult(10000000), '#ffff00');
+			this.drawPoint_PER(Vector3.up, '#ffff00');
 			this.drawPoint_PER(Vector3.right, '#ff00ff');
-			this.drawPoint_PER(Vector3.forward.mult(10000000), '#00ff00');
+			this.drawPoint_PER(Vector3.forward, '#00ff00');
 		}
 	}
 
@@ -110,24 +113,57 @@ class Scene {
 
 		Debug.log("viewport plane : " + vpPlane.toString(), Debug.COLOR.GREEN);
 		Debug.log("vertex : " + vertex.toString(), Debug.COLOR.GREEN);
-		Debug.log("Ray build : " + new Ray(this.camera.pos.cp().to(vertex), this.camera.pos).toString(), Debug.COLOR.GREEN);
+		Debug.log("Ray3 build : " + new Ray3(this.camera.pos.cp().to(vertex), this.camera.pos).toString(), Debug.COLOR.GREEN);
 
-		var I = new Ray(this.camera.pos.cp().to(vertex), this.camera.pos).getIntersectionWithPlane(vpPlane);
+		var I = new Ray3(this.camera.pos.cp().to(vertex), this.camera.pos).getIntersectionWithPlane(vpPlane);
 
 		if (I.isNothing())
 			return Maybe.Nothing;
 
 		Debug.log_g("Intersection on vp " + I.fromJust().toString(), Debug.COLOR.D_BLUE);
 
-		return Maybe.Just(vp.getRelative(I.fromJust()));
+		return I;
+	}
+
+	pointOnVP (v) {
+		return this.camera.mode === Camera.MODE.ORTHOGRAPHIC ? this.getPointOnviewPort_ORT(v) : getPointOnviewPort_PER(v);
+	}
+
+	relativeToVP (v) {
+		return this.camera.viewport.getRelative(v);
 	}
 
 	render (show_axe) {
 		Debug.log_i("Rendering ...", Debug.COLOR.GREEN);
+		this.canvasRenderer = new CanvasRenderer(this.canvas, this.ctx);
 
-		if (show_axe)
-			this.renderAxes();
-		return;
+		if (show_axe) {
+			this.add(new Ray3(Vector3.up, Vector3.zero), 1000);
+			this.add(new Ray3(Vector3.right, Vector3.zero), 1000);
+			this.add(new Ray3(Vector3.forward, Vector3.zero), 1000);
+		}
+
+		this.objs.forEach(function (_obj) {
+			_obj.obj.VP_Vertices = new Array();
+			_obj.obj.VP_Relative = new Array();
+			_obj.obj.vertices.forEach(function (v, i) {
+				var maybe = this.pointOnVP(v);
+				if (maybe.isJust()) {
+					_obj.obj.VP_Vertices[i] = maybe.fromJust();
+					_obj.obj.VP_Relative[i] = this.relativeToVP(_obj.obj.VP_Vertices[i]);
+					this.canvasRenderer.addPoint(_obj.obj.VP_Relative[i], _obj.idx, _obj.col, _obj.thick);
+				}
+			}, this);
+
+			// @TODO : push segment, ray and line
+		
+		}, this);
+
+		this.canvasRenderer.render();
+
+	}
+}
+/* Render
 		this.vpObj = new Array();
 
 		this.objs.forEach(function (o, i) {
@@ -200,5 +236,4 @@ class Scene {
 				this.drawRectangle(p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, p3.x, p3.y);
 			}
 		}, this);
-	};
-}
+*/
