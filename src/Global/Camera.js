@@ -110,23 +110,20 @@ class Camera {
                 right = Vector3.left;
         else
             if (this.rotDir.z == 0)
-                right = new Vector3(-this.rotDir.z / this.rotDir.x, 0, 1 ).normalize();
+                right = new Vector3(-this.rotDir.z / this.rotDir.x, 0, 1 ).setSize(this.width / 2);
             else
-                right = new Vector3(1, 0, -this.rotDir.x / this.rotDir.z ).normalize();
+                right = new Vector3(1, 0, -this.rotDir.x / this.rotDir.z ).setSize(this.width / 2);
 
-        var u = Math.sqrt(this.height * this.height / 4 + this.width * this.width / 4);
-        var radian = this.width === 0 ? Math.PI/2 : Math.atan( this.height / this.width );
+        var down = right.rotateFrom( Matrix.rotationMatrix(this.rotDir, Math.PI / 2) ).setSize(this.height / 2);
 
         // rotation is not taken into account at the moment
-        Debug.log("Right : " + right.toString(), Debug.COLOR.YELLOW);
-        Debug.log("Rotate " + radian + " rad ; Matrix : \n" + Matrix.rotationMatrix(this.rotDir, -radian).toString(false), Debug.COLOR.YELLOW);
+        Debug.log("Right divided by 2 : " + right.toString(), Debug.COLOR.YELLOW);
+        Debug.log("Down divided by 2 : " + down.toString(), Debug.COLOR.YELLOW);
         
         return new Parallelogram (
-            this.rotDir.cp().mult(this.distViewPort).add(this.pos).sub(right.rotateFrom(
-                Matrix.rotationMatrix(this.rotDir, -radian)
-            ).setSize(u)),
-            right.cp().setSize(this.width),
-            new Vector3 (0, this.height, 0)
+            this.rotDir.cp().mult(this.distViewPort).add(this.pos).sub(right).sub(down),
+            right.setSize(this.width),
+            down.setSize(this.height),
         );
     }
 }

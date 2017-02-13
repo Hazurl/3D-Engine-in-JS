@@ -20,7 +20,8 @@ class Parallelogram {
 	getRelative (vertex) {
 		Debug.log_i("vertex to find relative : " + vertex, Debug.COLOR.BLUE);
 		Debug.log_i("this plane : " + this, Debug.COLOR.BLUE);
-		/*	| t * v0.x + k * v1.x = vertex.x - origin.x
+		/*
+		 *	| t * v0.x + k * v1.x = vertex.x - origin.x
 		 *	| t * v0.y + k * v1.y = vertex.y - origin.y
 		 * 	| t * v0.z + k * v1.z = vertex.z - origin.z
 		 * 
@@ -29,11 +30,11 @@ class Parallelogram {
 		 * [ v0.y		v1.y		vertex.y - origin.y ]
 		 * [ v0.z		v1.z		vertex.z - origin.z ]
 		 * 
-		 * - find 'i' such as M[i, 1] != 0
+		 * - find 'i' such that M[i, 1] != 0
 		 * - M[i+1] = [ M[i+1, 0] - M[i+1, 1] / M[i, 1] * M[i, 0]		0		M[i, 2] - M[i+1, 1] / M[i, 1] * M[i, 2] ]
 		 * - M[i+2] = [ M[i+2, 0] - M[i+2, 1] / M[i, 1] * M[i, 0]		0		M[i, 2] - M[i+2, 1] / M[i, 1] * M[i, 2] ]
 		 * 
-		 * - find 'j' such as M[i, 0] != 0 and j != i
+		 * - find 'j' such that M[i, 0] != 0 and j != i
 		 * - M[j]= [ 1		0		M[j, 2] / M[j, 0] ]
 		 * 
 		 * So t = M[j, 2]
