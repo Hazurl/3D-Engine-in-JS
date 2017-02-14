@@ -46,5 +46,26 @@ class Parallelogram {
 		 * 
 		 * return (t, k)
 		 */
+		var M = new Matrix(3, 3).setAll(this.v0.x, this.v1.x, vertex.x - this.origin.x, 
+										this.v0.y, this.v1.y, vertex.y - this.origin.y,
+										this.v0.z, this.v1.z, vertex.z - this.origin.z);
+		var first = M.get(0, 1) != 0 ? 0 : M.get(1, 1) != 0 ? 1 : 2; // v1 can't be null
+		var first_next = (first + 1) % 3;
+		var first_next_next = (first + 2) % 3;
+
+		M.set(first_next, 0, M.get(first_next, 0) - M.get(first_next, 1) / M.get(first, 1) * M.get(first, 0));
+		M.set(first_next, 1, 0);
+		M.set(first_next, 2, M.get(first, 2) - M.get(first_next, 1) / M.get(first, 1) * M.get(first, 0));
+
+		M.set(first_next_next, 0, M.get(first_next_next, 0) - M.get(first_next_next, 1) / M.get(first, 1) * M.get(first, 0));
+		M.set(first_next_next, 1, 0);
+		M.set(first_next_next, 2, M.get(first, 2) - M.get(first_next_next, 1) / M.get(first, 1) * M.get(first, 0));
+
+		var second = M.get(first_next, 0) != 0 ? first_next : first_next_next;
+
+		var t = M.get(second, 2) / M.get(second, 0);
+		var k = M.get(first, 2) - M.get(first, 0) * t / M.get(first, 1);
+
+		return new Vector2(t, k);
 	}
 }
