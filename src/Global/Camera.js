@@ -123,7 +123,7 @@ class Camera {
         return new Parallelogram (
             this.rotDir.cp().mult(this.distViewPort).add(this.pos).sub(right).sub(down),
             right.setSize(this.width),
-            down.setSize(this.height),
+            down.setSize(this.height)
         );
     }
 }

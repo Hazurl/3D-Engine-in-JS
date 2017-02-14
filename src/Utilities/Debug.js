@@ -98,7 +98,7 @@ Object.defineProperty(this, '__stack', {
 
 Object.defineProperty(this, '__line', {
   get: function(){
-    return __stack[1].getLine3Number();
+    return __stack[1].getLineNumber();
   }
 });
 

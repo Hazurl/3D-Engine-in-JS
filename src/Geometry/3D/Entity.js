@@ -1,17 +1,19 @@
 class Entity {
-    constructor (name, center, vertexes, triangles, rectangles) {
+    constructor (name, center, vertices, triangles, rectangles, rays, lines) {
         Debug.incrementMem('Entity');
 
         this.name = name;
         
         this.center = instanceofOr(center, Vector3, Vector3.zero);
-        this.vertexes = instanceofOr(vertexes, Array, new Array());
+        this.vertices = instanceofOr(vertices, Array, new Array());
         this.triangles = instanceofOr(triangles, Array, new Array());
         this.rectangles = instanceofOr(rectangles, Array, new Array());
+        this.rays = instanceofOr(rays, Array, new Array());
+        this.lines = instanceofOr(lines, Array, new Array());
     }
 
     toString () {
-        return this.name + " at " + this.center.toString() + " (" + this.vertexes.length + " vertexes)"
+        return this.name + " at " + this.center.toString() + " (" + this.vertices.length + " vertices)"
     }
 
     static getCube (center, size) {
@@ -31,7 +33,7 @@ class Entity {
         /*
             5-----1
            /|    /|
-          4-7---0-3
+          4-7---0-3        7 and 3 are behind
           |/    |/
           6-----2
         */

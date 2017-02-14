@@ -126,7 +126,7 @@ class Scene {
 	}
 
 	pointOnVP (v) {
-		return this.camera.mode === Camera.MODE.ORTHOGRAPHIC ? this.getPointOnviewPort_ORT(v) : getPointOnviewPort_PER(v);
+		return this.camera.mode === Camera.MODE.ORTHOGRAPHIC ? this.getPointOnviewPort_ORT(v) : this.getPointOnviewPort_PER(v);
 	}
 
 	relativeToVP (v) {
@@ -138,9 +138,17 @@ class Scene {
 		this.canvasRenderer = new CanvasRenderer(this.canvas, this.ctx);
 
 		if (show_axe) {
-			this.add(new Ray3(Vector3.up, Vector3.zero), 1000);
-			this.add(new Ray3(Vector3.right, Vector3.zero), 1000);
-			this.add(new Ray3(Vector3.forward, Vector3.zero), 1000);
+			var vx = new Array();
+			vx.push(Vector3.zero);
+
+			var ray = new Array(); ray.push(new Ray3(Vector3.forward, Vector3.zero));
+			this.add(new Entity("x_axe", Vector3.zero, vx, new Array(), new Array(), ray), 1000, '#ff0000', 5);
+			
+			ray = new Array(); ray.push(new Ray3(Vector3.up, Vector3.zero));
+			this.add(new Entity("y_axe", Vector3.zero, vx, new Array(), new Array(), ray), 1000, '#ff0000', 5);
+			
+			ray = new Array(); ray.push(new Ray3(Vector3.right, Vector3.zero));
+			this.add(new Entity("z_axe", Vector3.zero, vx, new Array(), new Array(), ray), 1000, '#ff0000', 5);
 		}
 
 		this.objs.forEach(function (_obj) {

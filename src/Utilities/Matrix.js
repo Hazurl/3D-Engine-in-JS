@@ -46,7 +46,7 @@ class Matrix {
 	}
 
 	setAll () {
-		if (arguments.length != this.size) {
+		if (arguments.length > this.size) {
 			Debug.error ("Matrix : can't assign a different Matrix size");
 			return;
 		}

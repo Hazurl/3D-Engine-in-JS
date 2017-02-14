@@ -47,11 +47,13 @@ class CanvasRenderer {
     render (objects) {
         if (!objects)
             return this.calculate();
+
+        var ctx = this.context;
         
         objects.forEach(function(obj) {
             if (obj.obj instanceof Vector2) {
                 ctx.fillStyle = obj.col;
-                ctx.fillRect(Math.floor(x - obj.thick/2), Math.floor(y - obj.thick/2), obj.thick, obj.thick);
+                ctx.fillRect(Math.floor(obj.obj.x - obj.thick/2), Math.floor(obj.obj.y - obj.thick/2), obj.thick, obj.thick);
             }
         });
     }

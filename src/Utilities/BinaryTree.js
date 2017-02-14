@@ -8,7 +8,7 @@ class BinaryTree {
         if (this.root === null)
             this.root = new Node(v, this.comp);
         else
-            this.root.push(v);
+            this.root.push(new Node(v, this.comp));
     }
 
     forEach (callback) {
@@ -27,7 +27,7 @@ class Node {
 
     push (v) {
         var comp = this.comp(v, this.value);
-        if (comp <= 0) {
+        if (comp) {
             if (this.left === null)
                 this.left = v;
             else
